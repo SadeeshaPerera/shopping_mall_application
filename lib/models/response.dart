@@ -1,5 +1,5 @@
-class Response{
+class Response {
   int? code;
   String? message;
-  Response({this.code,this.message});
+  Response({this.code, this.message});
 }

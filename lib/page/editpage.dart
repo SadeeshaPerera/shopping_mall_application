@@ -1,25 +1,24 @@
-import 'incidentlistpage.dart';
-
+import '/page/listpage.dart';
 import 'package:flutter/material.dart';
 
-import '../models/incident.dart';
-import '../services/incident_firebase_crud.dart';
+import '../models/employee.dart';
+import '../services/firebase_crud.dart';
 
-class EditIncident extends StatefulWidget {
-  final Incident? incident;
-  EditIncident({this.incident});
+class EditPage extends StatefulWidget {
+  final Employee? employee;
+  EditPage({this.employee});
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _EditIncident();
+    return _EditPage();
   }
 }
 
-class _EditIncident extends State<EditIncident> {
-  final _incident_name = TextEditingController();
-  final _incident_position = TextEditingController();
-  final _incident_contact = TextEditingController();
+class _EditPage extends State<EditPage> {
+  final _employee_name = TextEditingController();
+  final _employee_position = TextEditingController();
+  final _employee_contact = TextEditingController();
   final _docid = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -27,13 +26,13 @@ class _EditIncident extends State<EditIncident> {
   @override
   void initState() {
     // TODO: implement initState
-    _docid.value = TextEditingValue(text: widget.incident!.uid.toString());
-    _incident_name.value =
-        TextEditingValue(text: widget.incident!.incidentname.toString());
-    _incident_position.value =
-        TextEditingValue(text: widget.incident!.position.toString());
-    _incident_contact.value =
-        TextEditingValue(text: widget.incident!.contactno.toString());
+    _docid.value = TextEditingValue(text: widget.employee!.uid.toString());
+    _employee_name.value =
+        TextEditingValue(text: widget.employee!.employeename.toString());
+    _employee_position.value =
+        TextEditingValue(text: widget.employee!.position.toString());
+    _employee_contact.value =
+        TextEditingValue(text: widget.employee!.contactno.toString());
   }
 
   @override
@@ -49,7 +48,7 @@ class _EditIncident extends State<EditIncident> {
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final nameField = TextFormField(
-        controller: _incident_name,
+        controller: _employee_name,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -62,7 +61,7 @@ class _EditIncident extends State<EditIncident> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final positionField = TextFormField(
-        controller: _incident_position,
+        controller: _employee_position,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -75,7 +74,7 @@ class _EditIncident extends State<EditIncident> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final contactField = TextFormField(
-        controller: _incident_contact,
+        controller: _employee_contact,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -93,12 +92,12 @@ class _EditIncident extends State<EditIncident> {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => IncidentListPage(),
+              builder: (BuildContext context) => ListPage(),
             ),
             (route) => false, //if you want to disable back feature set to false
           );
         },
-        child: const Text('Informed Incidents'));
+        child: const Text('View List of Employee'));
 
     final SaveButon = Material(
       elevation: 5.0,
@@ -109,17 +108,17 @@ class _EditIncident extends State<EditIncident> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            var incidentresponse = await FirebaseCrud.updateIncident(
-                name: _incident_name.text,
-                position: _incident_position.text,
-                contactno: _incident_contact.text,
+            var response = await FirebaseCrud.updateEmployee(
+                name: _employee_name.text,
+                position: _employee_position.text,
+                contactno: _employee_contact.text,
                 docId: _docid.text);
-            if (incidentresponse.code != 200) {
+            if (response.code != 200) {
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(incidentresponse.message.toString()),
+                      content: Text(response.message.toString()),
                     );
                   });
             } else {
@@ -127,7 +126,7 @@ class _EditIncident extends State<EditIncident> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(incidentresponse.message.toString()),
+                      content: Text(response.message.toString()),
                     );
                   });
             }
@@ -144,7 +143,7 @@ class _EditIncident extends State<EditIncident> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('ShoppingMate'),
+        title: const Text('Inventory Management'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(

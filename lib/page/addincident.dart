@@ -82,16 +82,16 @@ class _AddIncident extends State<AddIncident> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            var response = await FirebaseCrud.addIncident(
+            var incidentresponse = await FirebaseCrud.addIncident(
                 name: _incident_name.text,
                 position: _incident_position.text,
                 contactno: _incident_contact.text);
-            if (response.code != 200) {
+            if (incidentresponse.code != 200) {
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(response.message.toString()),
+                      content: Text(incidentresponse.message.toString()),
                     );
                   });
             } else {
@@ -99,7 +99,7 @@ class _AddIncident extends State<AddIncident> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(response.message.toString()),
+                      content: Text(incidentresponse.message.toString()),
                     );
                   });
             }

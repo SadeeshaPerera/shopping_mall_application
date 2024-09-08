@@ -4,6 +4,7 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'; // new
 import 'package:flutter/material.dart';
 
 import 'home.dart';
+import 'registration_screen.dart'; // Import the registration screen
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -17,14 +18,35 @@ class AuthGate extends StatelessWidget {
           return SignInScreen(
             providers: [
               EmailAuthProvider(),
-              GoogleProvider(clientId: "YOUR_WEBCLIENT_ID"),  // new
+              GoogleProvider(clientId: "YOUR_WEBCLIENT_ID"), // new
+            ],
+            actions: [
+              AuthStateChangeAction<SignedIn>((context, state) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                );
+              }),
+              AuthStateChangeAction<UserCreated>((context, state) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                );
+              }),
+              AuthStateChangeAction<SigningUp>((context, state) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegistrationScreen()),
+                );
+              }),
             ],
             headerBuilder: (context, constraints, shrinkOffset) {
               return Padding(
                 padding: const EdgeInsets.all(20),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Image.asset('flutterfire_300x.png'),
+                  child: Image.asset('assets/images/ShoppingMateLogo.png'),
                 ),
               );
             },
@@ -50,7 +72,7 @@ class AuthGate extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Image.asset('flutterfire_300x.png'),
+                  child: Image.asset('assets/images/ShoppingMateLogo.png'),
                 ),
               );
             },

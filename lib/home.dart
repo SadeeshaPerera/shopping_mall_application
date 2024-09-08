@@ -1,6 +1,6 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopping_mall_application/page/addpage.dart';
+import 'package:shopping_mall_application/page/addincident.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -31,7 +31,8 @@ class HomeScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(2),
                         child: AspectRatio(
                           aspectRatio: 1,
-                          child: Image.asset('flutterfire_300x.png'),
+                          child:
+                              Image.asset('assets/images/ShoppingMateLogo.png'),
                         ),
                       ),
                     ],
@@ -46,7 +47,7 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Image.asset('dash.png'),
+            Image.asset('assets/images/ShoppingMateLogo.png'),
             Text(
               'Welcome!',
               style: Theme.of(context).textTheme.displaySmall,
@@ -55,7 +56,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddPage()));
+                    MaterialPageRoute(builder: (context) => AddIncident()));
               },
               child: const Text('Report an Incident'),
             ),

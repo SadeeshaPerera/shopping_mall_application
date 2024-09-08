@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/models/incident.dart';
-import '/page/addpage.dart';
-import '/page/editpage.dart';
+import '/page/addincident.dart';
+import '/page/editincident.dart';
 import 'package:flutter/material.dart';
 
-import '../services/firebase_crud.dart';
+import '../services/incident_firebase_crud.dart';
 
-class ListPage extends StatefulWidget {
+class IncidentListPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _ListPage();
+    return _IncidentListPage();
   }
 }
 
-class _ListPage extends State<ListPage> {
+class _IncidentListPage extends State<IncidentListPage> {
   final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readIncident();
   //FirebaseFirestore.instance.collection('Incident').snapshots();
   @override
@@ -33,7 +33,7 @@ class _ListPage extends State<ListPage> {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddPage(),
+                  builder: (BuildContext context) => AddIncident(),
                 ),
                 (route) =>
                     false, //if you want to disable back feature set to false
@@ -80,7 +80,7 @@ class _ListPage extends State<ListPage> {
                             Navigator.pushAndRemoveUntil<dynamic>(
                               context,
                               MaterialPageRoute<dynamic>(
-                                builder: (BuildContext context) => EditPage(
+                                builder: (BuildContext context) => EditIncident(
                                   incident: Incident(
                                       uid: e.id,
                                       incidentname: e["incident_name"],

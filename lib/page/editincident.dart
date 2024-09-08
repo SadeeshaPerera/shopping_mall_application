@@ -1,22 +1,22 @@
-import '/page/listpage.dart';
+import 'incidentlistpage.dart';
 
 import 'package:flutter/material.dart';
 
 import '../models/incident.dart';
-import '../services/firebase_crud.dart';
+import '../services/incident_firebase_crud.dart';
 
-class EditPage extends StatefulWidget {
+class EditIncident extends StatefulWidget {
   final Incident? incident;
-  EditPage({this.incident});
+  EditIncident({this.incident});
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _EditPage();
+    return _EditIncident();
   }
 }
 
-class _EditPage extends State<EditPage> {
+class _EditIncident extends State<EditIncident> {
   final _incident_name = TextEditingController();
   final _incident_position = TextEditingController();
   final _incident_contact = TextEditingController();
@@ -93,7 +93,7 @@ class _EditPage extends State<EditPage> {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => ListPage(),
+              builder: (BuildContext context) => IncidentListPage(),
             ),
             (route) => false, //if you want to disable back feature set to false
           );

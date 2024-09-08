@@ -1,17 +1,17 @@
-import '/page/listpage.dart';
+import 'incidentlistpage.dart';
 import 'package:flutter/material.dart';
 
-import '../services/firebase_crud.dart';
+import '../services/incident_firebase_crud.dart';
 
-class AddPage extends StatefulWidget {
+class AddIncident extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _AddPage();
+    return _AddIncident();
   }
 }
 
-class _AddPage extends State<AddPage> {
+class _AddIncident extends State<AddIncident> {
   final _incident_name = TextEditingController();
   final _incident_position = TextEditingController();
   final _incident_contact = TextEditingController();
@@ -66,7 +66,7 @@ class _AddPage extends State<AddPage> {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => ListPage(),
+              builder: (BuildContext context) => IncidentListPage(),
             ),
             (route) => false, //To disable back feature set to false
           );

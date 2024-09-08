@@ -18,7 +18,7 @@ class RegistrationScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: AspectRatio(
             aspectRatio: 1,
-            child: Image.asset('flutterfire_300x.png'),
+            child: Image.asset('assets/images/ShoppingMateLogo.png'),
           ),
         );
       },
@@ -44,7 +44,7 @@ class RegistrationScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: AspectRatio(
             aspectRatio: 1,
-            child: Image.asset('flutterfire_300x.png'),
+            child: Image.asset('assets/images/ShoppingMateLogo.png'),
           ),
         );
       },

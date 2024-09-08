@@ -1,27 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '/models/employee.dart';
-import '/page/addpage.dart';
-import '/page/editpage.dart';
+import '/models/storeitem.dart';
+import '/page/additem.dart';
+import '/page/edititem.dart';
 import 'package:flutter/material.dart';
 
 import '../services/firebase_crud.dart';
 
-class ListPage extends StatefulWidget {
+class ItemListPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
   }
 }
 
-class _ListPage extends State<ListPage> {
-  final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readEmployee();
-  //FirebaseFirestore.instance.collection('Employee').snapshots();
+class _ListPage extends State<ItemListPage> {
+  final Stream<QuerySnapshot> collectionReference =
+      FirebaseCrud.readStoreItem();
+  //FirebaseFirestore.instance.collection('StoreItem').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("List of Employee"),
+        title: const Text("List of StoreItem"),
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
@@ -33,7 +34,7 @@ class _ListPage extends State<ListPage> {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddPage(),
+                  builder: (BuildContext context) => AddItem(),
                 ),
                 (route) =>
                     false, //if you want to disable back feature set to false
@@ -53,7 +54,7 @@ class _ListPage extends State<ListPage> {
                   return Card(
                       child: Column(children: [
                     ListTile(
-                      title: Text(e["employee_name"]),
+                      title: Text(e["storeitem_name"]),
                       subtitle: Container(
                         child: (Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,10 +81,10 @@ class _ListPage extends State<ListPage> {
                             Navigator.pushAndRemoveUntil<dynamic>(
                               context,
                               MaterialPageRoute<dynamic>(
-                                builder: (BuildContext context) => EditPage(
-                                  employee: Employee(
+                                builder: (BuildContext context) => EditItem(
+                                  storeitem: StoreItem(
                                       uid: e.id,
-                                      employeename: e["employee_name"],
+                                      storeitemname: e["storeitem_name"],
                                       position: e["position"],
                                       contactno: e["contact_no"]),
                                 ),
@@ -101,15 +102,15 @@ class _ListPage extends State<ListPage> {
                           ),
                           child: const Text('Delete'),
                           onPressed: () async {
-                            var response =
-                                await FirebaseCrud.deleteEmployee(docId: e.id);
-                            if (response.code != 200) {
+                            var storeitemresponse =
+                                await FirebaseCrud.deleteStoreItem(docId: e.id);
+                            if (storeitemresponse.code != 200) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      content:
-                                          Text(response.message.toString()),
+                                      content: Text(
+                                          storeitemresponse.message.toString()),
                                     );
                                   });
                             }

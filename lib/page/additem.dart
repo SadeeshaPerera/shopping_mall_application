@@ -1,27 +1,27 @@
-import '/page/listpage.dart';
+import 'itemlistpage.dart';
 import 'package:flutter/material.dart';
 
 import '../services/firebase_crud.dart';
 
-class AddPage extends StatefulWidget {
+class AddItem extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _AddPage();
+    return _AddItem();
   }
 }
 
-class _AddPage extends State<AddPage> {
-  final _employee_name = TextEditingController();
-  final _employee_position = TextEditingController();
-  final _employee_contact = TextEditingController();
+class _AddItem extends State<AddItem> {
+  final _storeitem_name = TextEditingController();
+  final _storeitem_position = TextEditingController();
+  final _storeitem_contact = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final nameField = TextFormField(
-        controller: _employee_name,
+        controller: _storeitem_name,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -34,7 +34,7 @@ class _AddPage extends State<AddPage> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final positionField = TextFormField(
-        controller: _employee_position,
+        controller: _storeitem_position,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -47,7 +47,7 @@ class _AddPage extends State<AddPage> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final contactField = TextFormField(
-        controller: _employee_contact,
+        controller: _storeitem_contact,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -65,12 +65,12 @@ class _AddPage extends State<AddPage> {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => ListPage(),
+              builder: (BuildContext context) => ItemListPage(),
             ),
             (route) => false, //To disable back feature set to false
           );
         },
-        child: const Text('View List of Employee'));
+        child: const Text('View List of StoreItem'));
 
     final SaveButon = Material(
       elevation: 5.0,
@@ -81,16 +81,16 @@ class _AddPage extends State<AddPage> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            var response = await FirebaseCrud.addEmployee(
-                name: _employee_name.text,
-                position: _employee_position.text,
-                contactno: _employee_contact.text);
-            if (response.code != 200) {
+            var storeitemresponse = await FirebaseCrud.addStoreItem(
+                name: _storeitem_name.text,
+                position: _storeitem_position.text,
+                contactno: _storeitem_contact.text);
+            if (storeitemresponse.code != 200) {
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(response.message.toString()),
+                      content: Text(storeitemresponse.message.toString()),
                     );
                   });
             } else {
@@ -98,7 +98,7 @@ class _AddPage extends State<AddPage> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(response.message.toString()),
+                      content: Text(storeitemresponse.message.toString()),
                     );
                   });
             }

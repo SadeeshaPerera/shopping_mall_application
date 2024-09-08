@@ -1,89 +1,89 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../models/response.dart';
+import '../../models/storeitemresponse.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-final CollectionReference _Collection = _firestore.collection('Employee');
+final CollectionReference _Collection = _firestore.collection('StoreItem');
 
 class FirebaseCrud {
 //CRUD method here
 
-//Add employee
-  static Future<Response> addEmployee({
+//Add storeitem
+  static Future<StoreItemResponse> addStoreItem({
     required String name,
     required String position,
     required String contactno,
   }) async {
-    Response response = Response();
+    StoreItemResponse storeitemresponse = StoreItemResponse();
     DocumentReference documentReferencer = _Collection.doc();
 
     Map<String, dynamic> data = <String, dynamic>{
-      "employee_name": name,
+      "storeitem_name": name,
       "position": position,
       "contact_no": contactno
     };
 
     var result = await documentReferencer.set(data).whenComplete(() {
-      response.code = 200;
-      response.message = "Sucessfully added to the database";
+      storeitemresponse.code = 200;
+      storeitemresponse.message = "Sucessfully added to the database";
     }).catchError((e) {
-      response.code = 500;
-      response.message = e;
+      storeitemresponse.code = 500;
+      storeitemresponse.message = e;
     });
 
-    return response;
+    return storeitemresponse;
   }
 
-  //Read employee records
-  static Stream<QuerySnapshot> readEmployee() {
+  //Read storeitem records
+  static Stream<QuerySnapshot> readStoreItem() {
     CollectionReference notesItemCollection = _Collection;
 
     return notesItemCollection.snapshots();
   }
 
-  //Update employee record
+  //Update storeitem record
 
-  static Future<Response> updateEmployee({
+  static Future<StoreItemResponse> updateStoreItem({
     required String name,
     required String position,
     required String contactno,
     required String docId,
   }) async {
-    Response response = Response();
+    StoreItemResponse storeitemresponse = StoreItemResponse();
     DocumentReference documentReferencer = _Collection.doc(docId);
 
     Map<String, dynamic> data = <String, dynamic>{
-      "employee_name": name,
+      "storeitem_name": name,
       "position": position,
       "contact_no": contactno
     };
 
     await documentReferencer.update(data).whenComplete(() {
-      response.code = 200;
-      response.message = "Sucessfully updated Employee";
+      storeitemresponse.code = 200;
+      storeitemresponse.message = "Sucessfully updated StoreItem";
     }).catchError((e) {
-      response.code = 500;
-      response.message = e;
+      storeitemresponse.code = 500;
+      storeitemresponse.message = e;
     });
 
-    return response;
+    return storeitemresponse;
   }
 
-  //Delete employee record
+  //Delete storeitem record
 
-  static Future<Response> deleteEmployee({
+  static Future<StoreItemResponse> deleteStoreItem({
     required String docId,
   }) async {
-    Response response = Response();
+    StoreItemResponse storeitemresponse = StoreItemResponse();
     DocumentReference documentReferencer = _Collection.doc(docId);
 
     await documentReferencer.delete().whenComplete(() {
-      response.code = 200;
-      response.message = "Sucessfully Deleted Employee";
+      storeitemresponse.code = 200;
+      storeitemresponse.message = "Sucessfully Deleted StoreItem";
     }).catchError((e) {
-      response.code = 500;
-      response.message = e;
+      storeitemresponse.code = 500;
+      storeitemresponse.message = e;
     });
 
-    return response;
+    return storeitemresponse;
   }
 }

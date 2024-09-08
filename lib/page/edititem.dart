@@ -1,24 +1,24 @@
-import '/page/listpage.dart';
+import 'itemlistpage.dart';
 import 'package:flutter/material.dart';
 
-import '../models/employee.dart';
+import '../models/storeitem.dart';
 import '../services/firebase_crud.dart';
 
-class EditPage extends StatefulWidget {
-  final Employee? employee;
-  EditPage({this.employee});
+class EditItem extends StatefulWidget {
+  final StoreItem? storeitem;
+  EditItem({this.storeitem});
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _EditPage();
+    return _EditItem();
   }
 }
 
-class _EditPage extends State<EditPage> {
-  final _employee_name = TextEditingController();
-  final _employee_position = TextEditingController();
-  final _employee_contact = TextEditingController();
+class _EditItem extends State<EditItem> {
+  final _storeitem_name = TextEditingController();
+  final _storeitem_position = TextEditingController();
+  final _storeitem_contact = TextEditingController();
   final _docid = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -26,13 +26,13 @@ class _EditPage extends State<EditPage> {
   @override
   void initState() {
     // TODO: implement initState
-    _docid.value = TextEditingValue(text: widget.employee!.uid.toString());
-    _employee_name.value =
-        TextEditingValue(text: widget.employee!.employeename.toString());
-    _employee_position.value =
-        TextEditingValue(text: widget.employee!.position.toString());
-    _employee_contact.value =
-        TextEditingValue(text: widget.employee!.contactno.toString());
+    _docid.value = TextEditingValue(text: widget.storeitem!.uid.toString());
+    _storeitem_name.value =
+        TextEditingValue(text: widget.storeitem!.storeitemname.toString());
+    _storeitem_position.value =
+        TextEditingValue(text: widget.storeitem!.position.toString());
+    _storeitem_contact.value =
+        TextEditingValue(text: widget.storeitem!.contactno.toString());
   }
 
   @override
@@ -48,7 +48,7 @@ class _EditPage extends State<EditPage> {
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final nameField = TextFormField(
-        controller: _employee_name,
+        controller: _storeitem_name,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -61,7 +61,7 @@ class _EditPage extends State<EditPage> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final positionField = TextFormField(
-        controller: _employee_position,
+        controller: _storeitem_position,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -74,7 +74,7 @@ class _EditPage extends State<EditPage> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final contactField = TextFormField(
-        controller: _employee_contact,
+        controller: _storeitem_contact,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -92,12 +92,12 @@ class _EditPage extends State<EditPage> {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => ListPage(),
+              builder: (BuildContext context) => ItemListPage(),
             ),
             (route) => false, //if you want to disable back feature set to false
           );
         },
-        child: const Text('View List of Employee'));
+        child: const Text('View List of StoreItem'));
 
     final SaveButon = Material(
       elevation: 5.0,
@@ -108,17 +108,17 @@ class _EditPage extends State<EditPage> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            var response = await FirebaseCrud.updateEmployee(
-                name: _employee_name.text,
-                position: _employee_position.text,
-                contactno: _employee_contact.text,
+            var storeitemresponse = await FirebaseCrud.updateStoreItem(
+                name: _storeitem_name.text,
+                position: _storeitem_position.text,
+                contactno: _storeitem_contact.text,
                 docId: _docid.text);
-            if (response.code != 200) {
+            if (storeitemresponse.code != 200) {
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(response.message.toString()),
+                      content: Text(storeitemresponse.message.toString()),
                     );
                   });
             } else {
@@ -126,7 +126,7 @@ class _EditPage extends State<EditPage> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(response.message.toString()),
+                      content: Text(storeitemresponse.message.toString()),
                     );
                   });
             }

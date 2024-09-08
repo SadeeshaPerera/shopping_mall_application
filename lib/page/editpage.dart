@@ -2,12 +2,12 @@ import '/page/listpage.dart';
 
 import 'package:flutter/material.dart';
 
-import '../models/employee.dart';
+import '../models/incident.dart';
 import '../services/firebase_crud.dart';
 
 class EditPage extends StatefulWidget {
-  final Employee? employee;
-  EditPage({this.employee});
+  final Incident? incident;
+  EditPage({this.incident});
 
   @override
   State<StatefulWidget> createState() {
@@ -17,9 +17,9 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPage extends State<EditPage> {
-  final _employee_name = TextEditingController();
-  final _employee_position = TextEditingController();
-  final _employee_contact = TextEditingController();
+  final _incident_name = TextEditingController();
+  final _incident_position = TextEditingController();
+  final _incident_contact = TextEditingController();
   final _docid = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -27,13 +27,13 @@ class _EditPage extends State<EditPage> {
   @override
   void initState() {
     // TODO: implement initState
-    _docid.value = TextEditingValue(text: widget.employee!.uid.toString());
-    _employee_name.value =
-        TextEditingValue(text: widget.employee!.employeename.toString());
-    _employee_position.value =
-        TextEditingValue(text: widget.employee!.position.toString());
-    _employee_contact.value =
-        TextEditingValue(text: widget.employee!.contactno.toString());
+    _docid.value = TextEditingValue(text: widget.incident!.uid.toString());
+    _incident_name.value =
+        TextEditingValue(text: widget.incident!.incidentname.toString());
+    _incident_position.value =
+        TextEditingValue(text: widget.incident!.position.toString());
+    _incident_contact.value =
+        TextEditingValue(text: widget.incident!.contactno.toString());
   }
 
   @override
@@ -49,7 +49,7 @@ class _EditPage extends State<EditPage> {
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final nameField = TextFormField(
-        controller: _employee_name,
+        controller: _incident_name,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -62,7 +62,7 @@ class _EditPage extends State<EditPage> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final positionField = TextFormField(
-        controller: _employee_position,
+        controller: _incident_position,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -75,7 +75,7 @@ class _EditPage extends State<EditPage> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final contactField = TextFormField(
-        controller: _employee_contact,
+        controller: _incident_contact,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -98,7 +98,7 @@ class _EditPage extends State<EditPage> {
             (route) => false, //if you want to disable back feature set to false
           );
         },
-        child: const Text('View List of Employee'));
+        child: const Text('Informed Incidents'));
 
     final SaveButon = Material(
       elevation: 5.0,
@@ -109,10 +109,10 @@ class _EditPage extends State<EditPage> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            var response = await FirebaseCrud.updateEmployee(
-                name: _employee_name.text,
-                position: _employee_position.text,
-                contactno: _employee_contact.text,
+            var response = await FirebaseCrud.updateIncident(
+                name: _incident_name.text,
+                position: _incident_position.text,
+                contactno: _incident_contact.text,
                 docId: _docid.text);
             if (response.code != 200) {
               showDialog(

@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => AddPage()));
               },
-              child: const Text('Employee Section'),
+              child: const Text('Report an Incident'),
             ),
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_mall_application/page/addincident.dart';
 import 'package:shopping_mall_application/page/additem.dart';
+import 'package:shopping_mall_application/page/addpromotion.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -67,6 +68,13 @@ class HomeScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => AddItem()));
               },
               child: const Text('Add a Inventory Item'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddPromotion()));
+              },
+              child: const Text('Create a Promotion'),
             ),
           ],
         ),

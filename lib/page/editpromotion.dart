@@ -1,24 +1,24 @@
-import 'itemlistpage.dart';
+import '/page/promotionlistpage.dart';
 import 'package:flutter/material.dart';
 
-import '../models/storeitem.dart';
-import '../services/inventory_firebase_crud.dart';
+import '../models/promotion.dart';
+import '../services/promotion_firebase_crud.dart';
 
-class EditItem extends StatefulWidget {
-  final StoreItem? storeitem;
-  EditItem({this.storeitem});
+class PromotionEditPage extends StatefulWidget {
+  final Promotion? promotion;
+  PromotionEditPage({this.promotion});
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _EditItem();
+    return _EditPage();
   }
 }
 
-class _EditItem extends State<EditItem> {
-  final _storeitem_name = TextEditingController();
-  final _storeitem_position = TextEditingController();
-  final _storeitem_contact = TextEditingController();
+class _EditPage extends State<PromotionEditPage> {
+  final _promotion_name = TextEditingController();
+  final _promotion_position = TextEditingController();
+  final _promotion_contact = TextEditingController();
   final _docid = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -26,13 +26,13 @@ class _EditItem extends State<EditItem> {
   @override
   void initState() {
     // TODO: implement initState
-    _docid.value = TextEditingValue(text: widget.storeitem!.uid.toString());
-    _storeitem_name.value =
-        TextEditingValue(text: widget.storeitem!.storeitemname.toString());
-    _storeitem_position.value =
-        TextEditingValue(text: widget.storeitem!.position.toString());
-    _storeitem_contact.value =
-        TextEditingValue(text: widget.storeitem!.contactno.toString());
+    _docid.value = TextEditingValue(text: widget.promotion!.uid.toString());
+    _promotion_name.value =
+        TextEditingValue(text: widget.promotion!.promotionname.toString());
+    _promotion_position.value =
+        TextEditingValue(text: widget.promotion!.position.toString());
+    _promotion_contact.value =
+        TextEditingValue(text: widget.promotion!.contactno.toString());
   }
 
   @override
@@ -48,7 +48,7 @@ class _EditItem extends State<EditItem> {
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final nameField = TextFormField(
-        controller: _storeitem_name,
+        controller: _promotion_name,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -61,7 +61,7 @@ class _EditItem extends State<EditItem> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final positionField = TextFormField(
-        controller: _storeitem_position,
+        controller: _promotion_position,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -74,7 +74,7 @@ class _EditItem extends State<EditItem> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final contactField = TextFormField(
-        controller: _storeitem_contact,
+        controller: _promotion_contact,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -92,12 +92,12 @@ class _EditItem extends State<EditItem> {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => ItemListPage(),
+              builder: (BuildContext context) => PromotionListPage(),
             ),
             (route) => false, //if you want to disable back feature set to false
           );
         },
-        child: const Text('View List of StoreItem'));
+        child: const Text('View List of Promotion'));
 
     final SaveButon = Material(
       elevation: 5.0,
@@ -108,17 +108,17 @@ class _EditItem extends State<EditItem> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            var storeitemresponse = await FirebaseCrud.updateStoreItem(
-                name: _storeitem_name.text,
-                position: _storeitem_position.text,
-                contactno: _storeitem_contact.text,
+            var promotionresponse = await FirebaseCrud.updatePromotion(
+                name: _promotion_name.text,
+                position: _promotion_position.text,
+                contactno: _promotion_contact.text,
                 docId: _docid.text);
-            if (storeitemresponse.code != 200) {
+            if (promotionresponse.code != 200) {
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(storeitemresponse.message.toString()),
+                      content: Text(promotionresponse.message.toString()),
                     );
                   });
             } else {
@@ -126,7 +126,7 @@ class _EditItem extends State<EditItem> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: Text(storeitemresponse.message.toString()),
+                      content: Text(promotionresponse.message.toString()),
                     );
                   });
             }
@@ -143,7 +143,7 @@ class _EditItem extends State<EditItem> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Inventory Management'),
+        title: const Text('FreeCode Spot'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(

@@ -1,7 +1,7 @@
 import 'itemlistpage.dart';
 import 'package:flutter/material.dart';
 
-import '../services/firebase_crud.dart';
+import '../services/inventory_firebase_crud.dart';
 
 class AddItem extends StatefulWidget {
   @override

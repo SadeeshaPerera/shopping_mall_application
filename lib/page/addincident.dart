@@ -21,6 +21,9 @@ class _AddIncident extends State<AddIncident> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  // List of status options
+  final List<String> _statusOptions = ['Open', 'In Progress', 'Closed'];
+
   @override
   Widget build(BuildContext context) {
     final nameField = TextFormField(
@@ -113,19 +116,29 @@ class _AddIncident extends State<AddIncident> {
       ),
     );
 
-    final statusField = TextFormField(
-      controller: _incident_status,
-      autofocus: false,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'This field is required';
-        }
+    final statusField = DropdownButtonFormField<String>(
+      value: _statusOptions.first,
+      items: _statusOptions.map((String status) {
+        return DropdownMenuItem<String>(
+          value: status,
+          child: Text(status),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _incident_status.text = newValue!;
+        });
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Status",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'This field is required';
+        }
+      },
     );
 
     final viewListButton = TextButton(

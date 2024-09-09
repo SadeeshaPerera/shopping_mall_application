@@ -1,28 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '/models/storeitem.dart';
-import '/page/additem.dart';
-import '/page/edititem.dart';
+import '/models/promotion.dart';
+import '/page/addpromotion.dart';
+import '/page/editpromotion.dart';
 import 'package:flutter/material.dart';
 
-import '../services/inventory_firebase_crud.dart';
+import '../services/promotion_firebase_crud.dart';
 
-class ItemListPage extends StatefulWidget {
+class PromotionListPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
   }
 }
 
-class _ListPage extends State<ItemListPage> {
+class _ListPage extends State<PromotionListPage> {
   final Stream<QuerySnapshot> collectionReference =
-      FirebaseCrud.readStoreItem();
-  //FirebaseFirestore.instance.collection('StoreItem').snapshots();
+      FirebaseCrud.readPromotion();
+  //FirebaseFirestore.instance.collection('Promotion').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("List of StoreItem"),
+        title: const Text("List of Promotion"),
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
@@ -34,7 +34,7 @@ class _ListPage extends State<ItemListPage> {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddItem(),
+                  builder: (BuildContext context) => AddPromotion(),
                 ),
                 (route) =>
                     false, //if you want to disable back feature set to false
@@ -54,7 +54,7 @@ class _ListPage extends State<ItemListPage> {
                   return Card(
                       child: Column(children: [
                     ListTile(
-                      title: Text(e["storeitem_name"]),
+                      title: Text(e["promotion_name"]),
                       subtitle: Container(
                         child: (Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,10 +81,11 @@ class _ListPage extends State<ItemListPage> {
                             Navigator.pushAndRemoveUntil<dynamic>(
                               context,
                               MaterialPageRoute<dynamic>(
-                                builder: (BuildContext context) => EditItem(
-                                  storeitem: StoreItem(
+                                builder: (BuildContext context) =>
+                                    PromotionEditPage(
+                                  promotion: Promotion(
                                       uid: e.id,
-                                      storeitemname: e["storeitem_name"],
+                                      promotionname: e["promotion_name"],
                                       position: e["position"],
                                       contactno: e["contact_no"]),
                                 ),
@@ -102,15 +103,15 @@ class _ListPage extends State<ItemListPage> {
                           ),
                           child: const Text('Delete'),
                           onPressed: () async {
-                            var storeitemresponse =
-                                await FirebaseCrud.deleteStoreItem(docId: e.id);
-                            if (storeitemresponse.code != 200) {
+                            var promotionresponse =
+                                await FirebaseCrud.deletePromotion(docId: e.id);
+                            if (promotionresponse.code != 200) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
                                       content: Text(
-                                          storeitemresponse.message.toString()),
+                                          promotionresponse.message.toString()),
                                     );
                                   });
                             }

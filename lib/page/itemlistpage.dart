@@ -1,27 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '/models/incident.dart';
-import '/page/addincident.dart';
-import '/page/editincident.dart';
+import '/models/storeitem.dart';
+import '/page/additem.dart';
+import '/page/edititem.dart';
 import 'package:flutter/material.dart';
 
-import '../services/incident_firebase_crud.dart';
+import '../services/firebase_crud.dart';
 
-class IncidentListPage extends StatefulWidget {
+class ItemListPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _IncidentListPage();
+    return _ListPage();
   }
 }
 
-class _IncidentListPage extends State<IncidentListPage> {
-  final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readIncident();
-  //FirebaseFirestore.instance.collection('Incident').snapshots();
+class _ListPage extends State<ItemListPage> {
+  final Stream<QuerySnapshot> collectionReference =
+      FirebaseCrud.readStoreItem();
+  //FirebaseFirestore.instance.collection('StoreItem').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("List of Incident"),
+        title: const Text("List of StoreItem"),
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
@@ -33,7 +34,7 @@ class _IncidentListPage extends State<IncidentListPage> {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddIncident(),
+                  builder: (BuildContext context) => AddItem(),
                 ),
                 (route) =>
                     false, //if you want to disable back feature set to false
@@ -53,7 +54,7 @@ class _IncidentListPage extends State<IncidentListPage> {
                   return Card(
                       child: Column(children: [
                     ListTile(
-                      title: Text(e["incident_name"]),
+                      title: Text(e["storeitem_name"]),
                       subtitle: Container(
                         child: (Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,10 +81,10 @@ class _IncidentListPage extends State<IncidentListPage> {
                             Navigator.pushAndRemoveUntil<dynamic>(
                               context,
                               MaterialPageRoute<dynamic>(
-                                builder: (BuildContext context) => EditIncident(
-                                  incident: Incident(
+                                builder: (BuildContext context) => EditItem(
+                                  storeitem: StoreItem(
                                       uid: e.id,
-                                      incidentname: e["incident_name"],
+                                      storeitemname: e["storeitem_name"],
                                       position: e["position"],
                                       contactno: e["contact_no"]),
                                 ),
@@ -101,15 +102,15 @@ class _IncidentListPage extends State<IncidentListPage> {
                           ),
                           child: const Text('Delete'),
                           onPressed: () async {
-                            var incidentresponse =
-                                await FirebaseCrud.deleteIncident(docId: e.id);
-                            if (incidentresponse.code != 200) {
+                            var storeitemresponse =
+                                await FirebaseCrud.deleteStoreItem(docId: e.id);
+                            if (storeitemresponse.code != 200) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
                                       content: Text(
-                                          incidentresponse.message.toString()),
+                                          storeitemresponse.message.toString()),
                                     );
                                   });
                             }

@@ -55,6 +55,7 @@ class HomeScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.displaySmall,
             ),
             const SignOutButton(),
+            SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,

@@ -1,6 +1,7 @@
 import 'incidentlistpage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
+import 'package:flutter/services.dart'; // For input validation
 
 import '../services/incident_firebase_crud.dart';
 
@@ -101,13 +102,35 @@ class _AddIncident extends State<AddIncident> {
       ),
     );
 
+    // final contactField = TextFormField(
+    //   controller: _incident_contact,
+    //   autofocus: false,
+    //   validator: (value) {
+    //     if (value == null || value.trim().isEmpty) {
+    //       return 'This field is required';
+    //     }
+    //   },
+    //   decoration: InputDecoration(
+    //     contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+    //     hintText: "Contact Number",
+    //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+    //   ),
+    // );
     final contactField = TextFormField(
       controller: _incident_contact,
       autofocus: false,
+      keyboardType: TextInputType.number, // Set the keyboard type to number
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly, // Allow only digits
+      ],
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+          return 'Please enter a valid contact number';
+        }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),

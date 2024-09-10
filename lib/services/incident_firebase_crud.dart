@@ -28,7 +28,7 @@ class FirebaseCrud {
 
     await documentReferencer.set(data).whenComplete(() {
       incidentresponse.code = 200;
-      incidentresponse.message = "Successfully added to the database";
+      incidentresponse.message = "Incident reported successfully";
     }).catchError((e) {
       incidentresponse.code = 500;
       incidentresponse.message = e.toString();
@@ -112,7 +112,7 @@ class FirebaseCrud {
 
     await documentReferencer.set(data).whenComplete(() {
       storeitemresponse.code = 200;
-      storeitemresponse.message = "Successfully added to the database";
+      storeitemresponse.message = "Successfully addeded Store Item";
     }).catchError((e) {
       storeitemresponse.code = 500;
       storeitemresponse.message = e.toString();

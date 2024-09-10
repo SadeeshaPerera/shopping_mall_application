@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_mall_application/page/addincident.dart';
 import 'package:shopping_mall_application/page/additem.dart';
 import 'package:shopping_mall_application/page/addpromotion.dart';
+import 'package:shopping_mall_application/page/home/incidentsection.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -46,38 +47,41 @@ class HomeScreen extends StatelessWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Image.asset('assets/images/ShoppingMateLogo.png'),
-            Text(
-              'Welcome!',
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            const SignOutButton(),
-            SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddIncident()));
-              },
-              child: const Text('Report an Incident'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddItem()));
-              },
-              child: const Text('Add a Inventory Item'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddPromotion()));
-              },
-              child: const Text('Create a Promotion'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Image.asset('assets/images/ShoppingMateLogo.png'),
+              Text(
+                'Welcome!',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SignOutButton(),
+              SizedBox(height: 30),
+              IncidentCard(),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddIncident()));
+                },
+                child: const Text('Report an Incident'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddItem()));
+                },
+                child: const Text('Add a Inventory Item'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddPromotion()));
+                },
+                child: const Text('Create a Promotion'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -143,7 +143,7 @@ class _EditPage extends State<PromotionEditPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('FreeCode Spot'),
+        title: const Text('Promotions Mangement '),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(

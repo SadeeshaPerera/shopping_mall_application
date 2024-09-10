@@ -23,7 +23,11 @@ class _AddIncident extends State<AddIncident> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // List of status options
-  final List<String> _statusOptions = ['Open', 'In Progress', 'Closed'];
+  final List<String> _statusOptions = [
+    'Should Investigate',
+    'Currently Investigating',
+    'Resolved'
+  ];
 
   @override
   Widget build(BuildContext context) {

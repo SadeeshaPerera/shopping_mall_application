@@ -9,43 +9,60 @@ class IncidentCard extends StatelessWidget {
       child: Card(
         elevation: 5,
         margin: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 200.0,
-                autoPlay: true,
-                enlargeCenterPage: true,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.start, // Align title to the start
+            children: [
+              Center(
+                child: Text(
+                  'Your Safty is Our Priority', // Title for the card
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              items: [
-                'assets/images/fireemergency.jpg',
-                'assets/images/theft.jpeg',
-                'assets/images/valdalism.jpeg',
-              ].map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Image.asset(i, fit: BoxFit.cover, width: 1000);
+              SizedBox(height: 10), // Add some space below the title
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 200.0,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                ),
+                items: [
+                  'assets/images/fireemergency.jpg',
+                  'assets/images/theft.jpeg',
+                  'assets/images/valdalism.jpeg',
+                ].map((i) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Image.asset(i, fit: BoxFit.cover, width: 1000);
+                    },
+                  );
+                }).toList(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'If you see something, say something. Report any incidents you see to help keep our shopping mall safe.',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddIncident()),
+                    );
                   },
-                );
-              }).toList(),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Description of the incident goes here. This is a sample description.',
-                style: TextStyle(fontSize: 16),
+                  child: const Text('Report an Incident'),
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddIncident()),
-                );
-              },
-              child: const Text('Report an Incident'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -41,6 +41,7 @@ dependencies:
   google_sign_in: ^6.2.1
   firebase_ui_oauth_google: ^1.3.3
   cloud_firestore: ^5.4.0
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,9 @@ flutter:
   assets:
     - assets/images/incidentImg.jpeg
     - assets/images/ShoppingMateLogo.png
+    - assets/images/fireemergency.jpg
+    - assets/images/theft.jpeg
+    - assets/images/valdalism.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

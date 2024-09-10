@@ -1,9 +1,11 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopping_mall_application/page/addincident.dart';
 import 'package:shopping_mall_application/page/additem.dart';
 import 'package:shopping_mall_application/page/addcontract.dart';
 import 'package:shopping_mall_application/page/addpromotion.dart';
+import 'package:shopping_mall_application/page/admin/admin_main_screen.dart';
+import 'package:shopping_mall_application/page/home/incidentsection.dart';
+import 'package:shopping_mall_application/page/home/loyalty_section.dart'; // Import the LoyaltySection widget
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,63 +30,32 @@ class HomeScreen extends StatelessWidget {
                         Navigator.of(context).pop();
                       })
                     ],
-                    children: [
-                      const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(2),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child:
-                              Image.asset('assets/images/ShoppingMateLogo.png'),
-                        ),
-                      ),
-                    ],
+                    children: [],
                   ),
                 ),
               );
             },
-          )
+          ),
         ],
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Image.asset('assets/images/ShoppingMateLogo.png'),
-            Text(
-              'Welcome!',
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            const SignOutButton(),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddIncident()));
-              },
-              child: const Text('Report an Incident'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddItem()));
-              },
-              child: const Text('Add a Inventory Item'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddPromotion()));
-              },
-              child: const Text('Create a Promotion'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddContract()));
-              },
-              child: const Text('Create a Contract'),
-            ),
-          ],
+
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Image.asset('assets/images/ShoppingMateLogo.png'),
+              Text(
+                'Welcome!',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SignOutButton(),
+              SizedBox(height: 30), // Keep the spacing
+              IncidentCard(), // Use the custom IncidentCard widget here
+              LoyaltySection(), // Add the LoyaltySection widget here
+            ],
+          ),
+
         ),
       ),
     );

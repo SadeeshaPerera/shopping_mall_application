@@ -30,7 +30,7 @@ class _AddItem extends State<AddItem> {
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Name",
+            hintText: "Item Name",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final positionField = TextFormField(
@@ -43,7 +43,7 @@ class _AddItem extends State<AddItem> {
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Position",
+            hintText: "Item Category",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final contactField = TextFormField(
@@ -56,7 +56,7 @@ class _AddItem extends State<AddItem> {
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Contact Number",
+            hintText: "Item Provider",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
@@ -70,7 +70,7 @@ class _AddItem extends State<AddItem> {
             (route) => false, //To disable back feature set to false
           );
         },
-        child: const Text('View List of StoreItem'));
+        child: const Text('View List of Store Items'));
 
     final SaveButon = Material(
       elevation: 5.0,

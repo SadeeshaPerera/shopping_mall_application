@@ -1,9 +1,10 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopping_mall_application/page/addincident.dart';
 import 'package:shopping_mall_application/page/additem.dart';
 import 'package:shopping_mall_application/page/addpromotion.dart';
+import 'package:shopping_mall_application/page/admin/admin_main_screen.dart';
 import 'package:shopping_mall_application/page/home/incidentsection.dart';
+import 'package:shopping_mall_application/page/home/loyalty_section.dart'; // Import the LoyaltySection widget
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,22 +29,12 @@ class HomeScreen extends StatelessWidget {
                         Navigator.of(context).pop();
                       })
                     ],
-                    children: [
-                      const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(2),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child:
-                              Image.asset('assets/images/ShoppingMateLogo.png'),
-                        ),
-                      ),
-                    ],
+                    children: [],
                   ),
                 ),
               );
             },
-          )
+          ),
         ],
         automaticallyImplyLeading: false,
       ),
@@ -54,14 +45,12 @@ class HomeScreen extends StatelessWidget {
               Image.asset('assets/images/ShoppingMateLogo.png'),
               Text(
                 'Welcome!',
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall
-                    ?.copyWith(fontSize: 24),
+                style: Theme.of(context).textTheme.displaySmall,
               ),
               const SignOutButton(),
-              SizedBox(height: 30),
-              IncidentCard(),
+              SizedBox(height: 30), // Keep the spacing
+              IncidentCard(), // Use the custom IncidentCard widget here
+              LoyaltySection(), // Add the LoyaltySection widget here
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(context,

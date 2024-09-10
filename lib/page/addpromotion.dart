@@ -30,7 +30,7 @@ class _AddPage extends State<AddPromotion> {
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Name",
+            hintText: "Promotion Name",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final positionField = TextFormField(
@@ -43,7 +43,7 @@ class _AddPage extends State<AddPromotion> {
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Position",
+            hintText: "Promotion Description",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
     final contactField = TextFormField(
@@ -56,7 +56,7 @@ class _AddPage extends State<AddPromotion> {
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Contact Number",
+            hintText: "Percentage Discount",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
@@ -70,7 +70,7 @@ class _AddPage extends State<AddPromotion> {
             (route) => false, //To disable back feature set to false
           );
         },
-        child: const Text('View List of Promotion'));
+        child: const Text('View List of Promotions'));
 
     final SaveButon = Material(
       elevation: 5.0,

@@ -51,20 +51,6 @@ class HomeScreen extends StatelessWidget {
               SizedBox(height: 30), // Keep the spacing
               IncidentCard(), // Use the custom IncidentCard widget here
               LoyaltySection(), // Add the LoyaltySection widget here
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddItem()));
-                },
-                child: const Text('Add a Inventory Item'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddPromotion()));
-                },
-                child: const Text('Create a Promotion'),
-              ),
             ],
           ),
         ),

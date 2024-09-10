@@ -13,30 +13,31 @@ class LoyaltySection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Loyalty Program',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Text(
+                  'Join Our Loyalty Program',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 10),
             Text(
-              'Join our loyalty program and earn rewards for every purchase!',
+              'Join our loyalty program now and earn rewards for every purchase!',
               style: TextStyle(fontSize: 16),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Add your loyalty program action here
-              },
-              child: const Text('Join Now'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Add your view rewards action here
-              },
-              child: const Text('View Rewards'),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Add your loyalty program action here
+                },
+                child: const Text('Join Now'),
+              ),
             ),
           ],
         ),

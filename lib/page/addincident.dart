@@ -28,12 +28,48 @@ class _AddIncident extends State<AddIncident> {
     'Currently Investigating',
     'Resolved'
   ];
+  final List<String> _incidentNames = [
+    'Fire',
+    'Flood',
+    'Earthquake',
+    'Accident',
+    'Robbery',
+    'Theft',
+    'Vandal',
+    'Other'
+  ];
+  String? _selectedIncidentName; // To store the selected incident name
 
   @override
   Widget build(BuildContext context) {
-    final nameField = TextFormField(
-      controller: _incident_name,
-      autofocus: false,
+    // final nameField = TextFormField(
+    //   controller: _incident_name,
+    //   autofocus: false,
+    //   validator: (value) {
+    //     if (value == null || value.trim().isEmpty) {
+    //       return 'This field is required';
+    //     }
+    //   },
+    //   decoration: InputDecoration(
+    //     contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+    //     hintText: "Name",
+    //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+    //   ),
+    // );
+
+    final nameField = DropdownButtonFormField<String>(
+      value: _selectedIncidentName,
+      items: _incidentNames.map((String name) {
+        return DropdownMenuItem<String>(
+          value: name,
+          child: Text(name),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedIncidentName = newValue;
+        });
+      },
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
@@ -41,7 +77,7 @@ class _AddIncident extends State<AddIncident> {
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Name",
+        hintText: "Incident Type",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
@@ -191,7 +227,7 @@ class _AddIncident extends State<AddIncident> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             var incidentResponse = await FirebaseCrud.addIncident(
-              name: _incident_name.text,
+              name: _selectedIncidentName!, // Pass the selected incident name
               description: _incident_description.text,
               date: _incident_date.text,
               location: _incident_location.text,

@@ -7,66 +7,76 @@ final CollectionReference _Collection = _firestore.collection('StoreItem');
 class FirebaseCrud {
 //CRUD method here
 
-//Add storeitem
-  static Future<StoreItemResponse> addStoreItem({
-    required String name,
-    required String position,
-    required String contactno,
-  }) async {
-    StoreItemResponse storeitemresponse = StoreItemResponse();
-    DocumentReference documentReferencer = _Collection.doc();
+// Add store item
+static Future<StoreItemResponse> addStoreItem({
+  required String name,
+  required String category,
+  required int quantity,
+  required int price,
+}) async {
+  StoreItemResponse storeItemResponse = StoreItemResponse();
+  DocumentReference documentReferencer = _Collection.doc(); // Make sure _Collection refers to your "StoreItem" Firestore collection.
 
-    Map<String, dynamic> data = <String, dynamic>{
-      "storeitem_name": name,
-      "position": position,
-      "contact_no": contactno
-    };
+  // Correct the data map
+  Map<String, dynamic> data = <String, dynamic>{
+    "itemname": name,
+    "category": category,
+    "quantity": quantity, // Added quantity field
+    "price": price        // Added price field
+  };
 
-    var result = await documentReferencer.set(data).whenComplete(() {
-      storeitemresponse.code = 200;
-      storeitemresponse.message = "Sucessfully added to the database";
-    }).catchError((e) {
-      storeitemresponse.code = 500;
-      storeitemresponse.message = e;
-    });
-
-    return storeitemresponse;
+  // Try saving to Firestore
+  try {
+    await documentReferencer.set(data);
+    storeItemResponse.code = 200;
+    storeItemResponse.message = "Successfully added to the database";
+  } catch (e) {
+    storeItemResponse.code = 500;
+    storeItemResponse.message = e.toString();
   }
 
-  //Read storeitem records
-  static Stream<QuerySnapshot> readStoreItem() {
-    CollectionReference notesItemCollection = _Collection;
+  return storeItemResponse;
+}
 
-    return notesItemCollection.snapshots();
-  }
 
-  //Update storeitem record
+ // Read storeitem records
+static Stream<QuerySnapshot> readStoreItem() {
+  // Reference to the StoreItem collection in Firestore
+  CollectionReference storeItemCollection = FirebaseFirestore.instance.collection('StoreItem');
 
-  static Future<StoreItemResponse> updateStoreItem({
-    required String name,
-    required String position,
-    required String contactno,
-    required String docId,
-  }) async {
-    StoreItemResponse storeitemresponse = StoreItemResponse();
-    DocumentReference documentReferencer = _Collection.doc(docId);
+  // Return a stream of snapshots for real-time updates
+  return storeItemCollection.snapshots();
+}
 
-    Map<String, dynamic> data = <String, dynamic>{
-      "storeitem_name": name,
-      "position": position,
-      "contact_no": contactno
-    };
+  // Update store item record
+static Future<StoreItemResponse> updateStoreItem({
+  required String name,
+  required String category,
+  required int quantity,
+  required int price,
+  required String docId,
+}) async {
+  StoreItemResponse storeItemResponse = StoreItemResponse();
+  DocumentReference documentReferencer = _Collection.doc(docId);
 
-    await documentReferencer.update(data).whenComplete(() {
-      storeitemresponse.code = 200;
-      storeitemresponse.message = "Sucessfully updated StoreItem";
-    }).catchError((e) {
-      storeitemresponse.code = 500;
-      storeitemresponse.message = e;
-    });
+  Map<String, dynamic> data = <String, dynamic>{
+    "itemname": name,
+    "category": category,
+    "quantity": quantity,
+    "price": price,
+  };
 
-    return storeitemresponse;
-  }
+  await documentReferencer.update(data).whenComplete(() {
+    storeItemResponse.code = 200;
+    storeItemResponse.message = "Successfully updated StoreItem";
+  }).catchError((e) {
+    storeItemResponse.code = 500;
+    storeItemResponse.message = e;
+  });
+
+  return storeItemResponse;
+}
+
 
   //Delete storeitem record
 
@@ -86,4 +96,6 @@ class FirebaseCrud {
 
     return storeitemresponse;
   }
+
+  
 }

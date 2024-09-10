@@ -140,7 +140,9 @@ class _IncidentListPage extends State<IncidentListPage> {
                                 ),
                                 OutlinedButton(
                                   style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.red,
+                                    foregroundColor: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    backgroundColor: Colors.red,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 8),
                                     textStyle: TextStyle(fontSize: 16),

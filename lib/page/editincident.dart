@@ -119,6 +119,17 @@ class _EditIncidentState extends State<EditIncident> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue, // Text color
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 12), // Padding
+                  textStyle: TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold), // Text style
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // Rounded corners
+                  ),
+                ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     var incidentResponse = await FirebaseCrud.updateIncident(

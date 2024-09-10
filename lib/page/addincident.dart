@@ -23,11 +23,7 @@ class _AddIncident extends State<AddIncident> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // List of status options
-  final List<String> _statusOptions = [
-    'Should Investigate',
-    'Currently Investigating',
-    'Resolved'
-  ];
+  final List<String> _statusOptions = ['Urgent', 'Critical', 'Normal'];
   final List<String> _incidentNames = [
     'Fire',
     'Flood',
@@ -78,7 +74,7 @@ class _AddIncident extends State<AddIncident> {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Incident Type",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0)),
       ),
     );
 
@@ -91,9 +87,9 @@ class _AddIncident extends State<AddIncident> {
         }
       },
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        contentPadding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 25.0),
         hintText: "Description",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0)),
       ),
     );
 
@@ -123,7 +119,8 @@ class _AddIncident extends State<AddIncident> {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Date",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0)),
+        suffixIcon: Icon(Icons.calendar_today),
       ),
     );
 
@@ -138,7 +135,7 @@ class _AddIncident extends State<AddIncident> {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Location",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0)),
       ),
     );
 
@@ -174,8 +171,8 @@ class _AddIncident extends State<AddIncident> {
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Contact Number",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        hintText: "Your Contact Number",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0)),
       ),
     );
 
@@ -195,7 +192,7 @@ class _AddIncident extends State<AddIncident> {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Status",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0)),
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
@@ -214,7 +211,7 @@ class _AddIncident extends State<AddIncident> {
           (route) => false, // To disable back feature set to false
         );
       },
-      child: const Text('Informed Incidents'),
+      child: const Text('My Informed Incidents'),
     );
 
     final saveButton = Material(
@@ -255,7 +252,8 @@ class _AddIncident extends State<AddIncident> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Report an Incident'),
+        title: const Text('Report an Incident',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SingleChildScrollView(

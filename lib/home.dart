@@ -1,6 +1,7 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_mall_application/page/additem.dart';
+import 'package:shopping_mall_application/page/addcontract.dart';
 import 'package:shopping_mall_application/page/addpromotion.dart';
 import 'package:shopping_mall_application/page/admin/admin_main_screen.dart';
 import 'package:shopping_mall_application/page/home/incidentsection.dart';
@@ -38,6 +39,7 @@ class HomeScreen extends StatelessWidget {
         ],
         automaticallyImplyLeading: false,
       ),
+
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -53,6 +55,7 @@ class HomeScreen extends StatelessWidget {
               LoyaltySection(), // Add the LoyaltySection widget here
             ],
           ),
+
         ),
       ),
     );

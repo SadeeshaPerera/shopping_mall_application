@@ -62,13 +62,6 @@ class HomeScreen extends StatelessWidget {
               const SignOutButton(),
               SizedBox(height: 30),
               IncidentCard(),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (context) => AddIncident()));
-              //   },
-              //   child: const Text('Report an Incident'),
-              // ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(context,

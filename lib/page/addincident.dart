@@ -27,7 +27,6 @@ class _AddIncident extends State<AddIncident> {
   final List<String> _incidentNames = [
     'Fire',
     'Flood',
-    'Earthquake',
     'Accident',
     'Robbery',
     'Theft',

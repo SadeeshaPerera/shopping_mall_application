@@ -1,4 +1,4 @@
-# ShoppingMate -- Comprehensive Shopping Mall Application 
+# ShoppingMate -- Shopping Mall Application 
 
 
 This is a mobile application designed to streamline the process of maaging shopping mall operations.

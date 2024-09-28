@@ -1,8 +1,10 @@
 class StoreItem {
   String? uid;
-  String? storeitemname;
-  String? position;
-  String? contactno;
+  String? itemname;
+  String? category;
+  int? quantity;
+  int? price;
 
-  StoreItem({this.uid, this.storeitemname, this.position, this.contactno});
+
+  StoreItem({this.uid, this.itemname, this.category, this.quantity,this.price, required name});
 }

@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+
 import '/models/incident.dart';
 import '/page/addincident.dart';
 import '/page/editincident.dart';
-import 'package:flutter/material.dart';
-
 import '../services/incident_firebase_crud.dart';
 
 class IncidentListPage extends StatefulWidget {
@@ -15,28 +18,25 @@ class IncidentListPage extends StatefulWidget {
 
 class _IncidentListPage extends State<IncidentListPage> {
   final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readIncident();
-  //FirebaseFirestore.instance.collection('Incident').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("List of Incident"),
+        title: const Text("Reported Incidents",
+            style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(
-              Icons.app_registration,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.app_registration, color: Colors.white),
             onPressed: () {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
                   builder: (BuildContext context) => AddIncident(),
                 ),
-                (route) =>
-                    false, //if you want to disable back feature set to false
+                (route) => false, // Disable back feature
               );
             },
           )
@@ -50,74 +50,159 @@ class _IncidentListPage extends State<IncidentListPage> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ListView(
                 children: snapshot.data!.docs.map((e) {
-                  return Card(
-                      child: Column(children: [
-                    ListTile(
-                      title: Text(e["incident_name"]),
-                      subtitle: Container(
-                        child: (Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text("Position: " + e['position'],
-                                style: const TextStyle(fontSize: 14)),
-                            Text("Contact Number: " + e['contact_no'],
-                                style: const TextStyle(fontSize: 12)),
-                          ],
-                        )),
-                      ),
-                    ),
-                    ButtonBar(
-                      alignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(5.0),
-                            // primary: const Color.fromARGB(255, 143, 133, 226),
-                            textStyle: const TextStyle(fontSize: 20),
-                          ),
-                          child: const Text('Edit'),
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil<dynamic>(
-                              context,
-                              MaterialPageRoute<dynamic>(
-                                builder: (BuildContext context) => EditIncident(
-                                  incident: Incident(
-                                      uid: e.id,
-                                      incidentname: e["incident_name"],
-                                      position: e["position"],
-                                      contactno: e["contact_no"]),
+                  return Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Center(
+                      child: Card(
+                        child: Column(
+                          children: [
+                            Center(
+                              child: ListTile(
+                                title:
+                                    Center(child: Text(e["name"] ?? 'No Name')),
+                                subtitle: Container(
+                                  child: Center(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                            "Description: " +
+                                                (e['description'] ??
+                                                    'No Description'),
+                                            style:
+                                                const TextStyle(fontSize: 14)),
+                                        Text(
+                                            "Date: " + (e['date'] ?? 'No Date'),
+                                            style:
+                                                const TextStyle(fontSize: 14)),
+                                        Text(
+                                            "Location: " +
+                                                (e['location'] ??
+                                                    'No Location'),
+                                            style:
+                                                const TextStyle(fontSize: 14)),
+                                        Text(
+                                            "Contact Number: " +
+                                                (e['contactNumber'] ??
+                                                    'No Contact Number'),
+                                            style:
+                                                const TextStyle(fontSize: 12)),
+                                        Text(
+                                            "Status: " +
+                                                (e['status'] ?? 'No Status'),
+                                            style:
+                                                const TextStyle(fontSize: 12)),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                              (route) =>
-                                  false, //if you want to disable back feature set to false
-                            );
-                          },
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(5.0),
-                            // primary: const Color.fromARGB(255, 143, 133, 226),
-                            textStyle: const TextStyle(fontSize: 20),
-                          ),
-                          child: const Text('Delete'),
-                          onPressed: () async {
-                            var incidentresponse =
-                                await FirebaseCrud.deleteIncident(docId: e.id);
-                            if (incidentresponse.code != 200) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: Text(
-                                          incidentresponse.message.toString()),
+                            ),
+                            ButtonBar(
+                              alignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.blue,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    textStyle: TextStyle(fontSize: 16),
+                                  ),
+                                  child: const Text('Update'),
+                                  onPressed: () {
+                                    Navigator.pushAndRemoveUntil<dynamic>(
+                                      context,
+                                      MaterialPageRoute<dynamic>(
+                                        builder: (BuildContext context) =>
+                                            EditIncident(
+                                          incident: Incident(
+                                            id: e.id,
+                                            name: e["name"] ?? 'No Name',
+                                            description: e["description"] ??
+                                                'No Description',
+                                            date: DateTime.parse(e["date"] ??
+                                                DateTime.now()
+                                                    .toIso8601String()),
+                                            location:
+                                                e["location"] ?? 'No Location',
+                                            contactNumber: e["contactNumber"] ??
+                                                'No Contact Number',
+                                            status: e["status"] ?? 'No Status',
+                                          ),
+                                        ),
+                                      ),
+                                      (route) => false, // Disable back feature
                                     );
-                                  });
-                            }
-                          },
+                                  },
+                                ),
+                                OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    backgroundColor: Colors.red,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    textStyle: TextStyle(fontSize: 16),
+                                    side: BorderSide(
+                                        color: Colors.red), // Border color
+                                  ),
+                                  child: const Text('Remove'),
+                                  onPressed: () async {
+                                    var incidentResponse =
+                                        await FirebaseCrud.deleteIncident(
+                                            docId: e.id);
+                                    if (incidentResponse.code != 200) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            content: Text(incidentResponse
+                                                .message
+                                                .toString()),
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
+                                OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.green,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    textStyle: const TextStyle(fontSize: 16),
+                                    side: const BorderSide(
+                                        color: Colors.green), // Border color
+                                  ),
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.download, color: Colors.white),
+                                      SizedBox(width: 8),
+                                      Text('Report'),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    _generateAndDownloadPDF(
+                                      context,
+                                      e["name"] ?? 'No Name',
+                                      e["description"] ?? 'No Description',
+                                      e["date"] ?? 'No Date',
+                                      e["location"] ?? 'No Location',
+                                      e["contactNumber"] ?? 'No Contact Number',
+                                      e["status"] ?? 'No Status',
+                                    );
+                                  },
+                                )
+                              ],
+                            )
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ]));
+                  );
                 }).toList(),
               ),
             );
@@ -128,4 +213,44 @@ class _IncidentListPage extends State<IncidentListPage> {
       ),
     );
   }
+
+  void _generateAndDownloadPDF(
+      BuildContext context,
+      String name,
+      String description,
+      String date,
+      String location,
+      String contactNumber,
+      String status) async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Text(name, style: pw.TextStyle(fontSize: 24)),
+                pw.SizedBox(height: 20),
+                pw.Text("Description: $description",
+                    style: pw.TextStyle(fontSize: 18)),
+                pw.Text("Date: $date", style: pw.TextStyle(fontSize: 18)),
+                pw.Text("Location: $location",
+                    style: pw.TextStyle(fontSize: 18)),
+                pw.Text("Contact Number: $contactNumber",
+                    style: pw.TextStyle(fontSize: 18)),
+                pw.Text("Status: $status", style: pw.TextStyle(fontSize: 18)),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    final pdfBytes = await pdf.save();
+    await Printing.sharePdf(bytes: pdfBytes, filename: '$name.pdf');
+  }
 }
+
+void main() => runApp(MaterialApp(home: IncidentListPage()));

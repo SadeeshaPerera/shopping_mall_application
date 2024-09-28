@@ -1,117 +1,105 @@
-import 'itemlistpage.dart';
+import '/page/contractlistpage.dart';
 import 'package:flutter/material.dart';
 
-import '../services/inventory_firebase_crud.dart';
+import '../models/contract.dart';
+import '../services/contract_firebase_crud.dart';
 
-class AddItem extends StatefulWidget {
+class EditContract extends StatefulWidget {
+  final Contract? contract;
+  EditContract({this.contract});
+
   @override
   State<StatefulWidget> createState() {
-    return _AddItem();
+    // TODO: implement createState
+    return _EditPage();
   }
 }
 
-class _AddItem extends State<AddItem> {
-  // Controllers for form fields
-  final _storeitem_name = TextEditingController();
-  final _storeitem_category = TextEditingController();
-  final _storeitem_quantity = TextEditingController();
-  final _storeitem_price = TextEditingController();
+class _EditPage extends State<EditContract> {
+  final _contract_name = TextEditingController();
+  final _contract_position = TextEditingController();
+  final _contract_contact = TextEditingController();
+  final _docid = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    _docid.value = TextEditingValue(text: widget.contract!.uid.toString());
+    _contract_name.value =
+        TextEditingValue(text: widget.contract!.contractname.toString());
+    _contract_position.value =
+        TextEditingValue(text: widget.contract!.position.toString());
+    _contract_contact.value =
+        TextEditingValue(text: widget.contract!.contactno.toString());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Name field
+    final DocIDField = TextField(
+        controller: _docid,
+        readOnly: true,
+        autofocus: false,
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Name",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+
     final nameField = TextFormField(
-        controller: _storeitem_name,
+        controller: _contract_name,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
-          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Item Name",
+            hintText: "Name",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-
-    // Category field
-    final categoryField = TextFormField(
-        controller: _storeitem_category,
+    final positionField = TextFormField(
+        controller: _contract_position,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
-          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Category",
+            hintText: "Position",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-
-    // Quantity field
-    final quantityField = TextFormField(
-        controller: _storeitem_quantity,
-        keyboardType: TextInputType.number,
+    final contactField = TextFormField(
+        controller: _contract_contact,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
-          if (int.tryParse(value) == null) {
-            return 'Enter a valid number';
-          }
-          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-
-            hintText: "Quantity",
-
+            hintText: "Contact Number",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
-    // Price field
-    final priceField = TextFormField(
-        controller: _storeitem_price,
-        keyboardType: TextInputType.number,
-        autofocus: false,
-        validator: (value) {
-          if (value == null || value.trim().isEmpty) {
-            return 'This field is required';
-          }
-          if (int.tryParse(value) == null) {
-            return 'Enter a valid number';
-          }
-          return null;
-        },
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-
-            hintText: "Price",
-
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-
-    // Button to view item list
-    final viewListButton = TextButton(
+    final viewListbutton = TextButton(
         onPressed: () {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => ItemListPage(),
+              builder: (BuildContext context) => ContractListPage(),
             ),
-            (route) => false,
+            (route) => false, //if you want to disable back feature set to false
           );
         },
-        child: const Text('View List of Store Items'));
+        child: const Text('View List of Contract'));
 
-    // Save Button
-    final saveButton = Material(
+    final SaveButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -120,36 +108,42 @@ class _AddItem extends State<AddItem> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            var storeItemResponse = await FirebaseCrud.addStoreItem(
-              name: _storeitem_name.text,
-              category: _storeitem_category.text,
-              quantity: int.parse(_storeitem_quantity.text),
-              price: int.parse(_storeitem_price.text),
-            );
-
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  content: Text(storeItemResponse.message.toString()),
-                );
-              },
-            );
+            var contractresponse = await FirebaseCrud.updatecontract(
+                name: _contract_name.text,
+                position: _contract_position.text,
+                contactno: _contract_contact.text,
+                docId: _docid.text);
+            if (contractresponse.code != 200) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text(contractresponse.message.toString()),
+                    );
+                  });
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text(contractresponse.message.toString()),
+                    );
+                  });
+            }
           }
         },
         child: Text(
-          "Save",
+          "Update",
           style: TextStyle(color: Theme.of(context).primaryColorLight),
           textAlign: TextAlign.center,
         ),
       ),
     );
 
-    // Build UI
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Add New Store Item'),
+        title: const Text('FreeCode Spot'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(
@@ -163,17 +157,16 @@ class _AddItem extends State<AddItem> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  DocIDField,
+                  const SizedBox(height: 25.0),
                   nameField,
                   const SizedBox(height: 25.0),
-                  categoryField,
-                  const SizedBox(height: 25.0),
-                  quantityField,
-                  const SizedBox(height: 25.0),
-                  priceField,
+                  positionField,
                   const SizedBox(height: 35.0),
-                  viewListButton,
+                  contactField,
+                  viewListbutton,
                   const SizedBox(height: 45.0),
-                  saveButton,
+                  SaveButon,
                   const SizedBox(height: 15.0),
                 ],
               ),

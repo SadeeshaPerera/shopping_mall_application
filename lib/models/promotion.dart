@@ -1,8 +1,9 @@
 class Promotion {
   String? uid;
-  String? promotionname;
-  String? position;
-  String? contactno;
+  String? shopName;
+  String? date;
+  String? pictureUrl;
 
-  Promotion({this.uid, this.promotionname, this.position, this.contactno});
+  Promotion({this.uid, this.shopName, this.date, this.pictureUrl});
+
 }

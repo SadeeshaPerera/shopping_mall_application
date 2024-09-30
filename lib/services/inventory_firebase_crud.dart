@@ -5,97 +5,113 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _Collection = _firestore.collection('StoreItem');
 
 class FirebaseCrud {
-//CRUD method here
+  // Add store item
+  static Future<StoreItemResponse> addStoreItem({
+    required String name,
+    required String category,
+    required String itemtype,
+    required String description,
+    required Map<String, int> quantities,
+    required double price,
+    required String imageUrl,
+  }) async {
+    StoreItemResponse storeItemResponse = StoreItemResponse();
+    DocumentReference documentReferencer = _Collection.doc();
 
-// Add store item
-static Future<StoreItemResponse> addStoreItem({
-  required String name,
-  required String category,
-  required int quantity,
-  required int price,
-}) async {
-  StoreItemResponse storeItemResponse = StoreItemResponse();
-  DocumentReference documentReferencer = _Collection.doc(); // Make sure _Collection refers to your "StoreItem" Firestore collection.
+    // Create a timestamp for the created date & time
+    Timestamp timestamp = Timestamp.now();
 
-  // Correct the data map
-  Map<String, dynamic> data = <String, dynamic>{
-    "itemname": name,
-    "category": category,
-    "quantity": quantity, // Added quantity field
-    "price": price        // Added price field
-  };
+    // Data map with createdAt field
+    Map<String, dynamic> data = <String, dynamic>{
+      "itemname": name,
+      "category": category,
+      "itemtype": itemtype,
+      "description": description,
+      "quantities": quantities,
+      "price": price,
+      "imageUrl": imageUrl,
+      "createdAt": timestamp, // Timestamp for creation
+      "updatedAt": timestamp, // Initially, updatedAt is the same as createdAt
+    };
 
-  // Try saving to Firestore
-  try {
-    await documentReferencer.set(data);
-    storeItemResponse.code = 200;
-    storeItemResponse.message = "Successfully added to the database";
-  } catch (e) {
-    storeItemResponse.code = 500;
-    storeItemResponse.message = e.toString();
+    try {
+      await documentReferencer.set(data);
+      storeItemResponse.code = 200;
+      storeItemResponse.message = "Successfully added to the database";
+    } catch (e) {
+      storeItemResponse.code = 500;
+      storeItemResponse.message = e.toString();
+    }
+
+    return storeItemResponse;
   }
 
-  return storeItemResponse;
-}
-
-
- // Read storeitem records
-static Stream<QuerySnapshot> readStoreItem() {
-  // Reference to the StoreItem collection in Firestore
-  CollectionReference storeItemCollection = FirebaseFirestore.instance.collection('StoreItem');
-
-  // Return a stream of snapshots for real-time updates
-  return storeItemCollection.snapshots();
-}
+  // Read storeitem records
+  static Stream<QuerySnapshot> readStoreItem() {
+    CollectionReference storeItemCollection =
+        FirebaseFirestore.instance.collection('StoreItem');
+    return storeItemCollection.snapshots();
+  }
 
   // Update store item record
-static Future<StoreItemResponse> updateStoreItem({
-  required String name,
-  required String category,
-  required int quantity,
-  required int price,
-  required String docId,
-}) async {
-  StoreItemResponse storeItemResponse = StoreItemResponse();
-  DocumentReference documentReferencer = _Collection.doc(docId);
+  static Future<StoreItemResponse> updateStoreItem({
+    required String name,
+    required String category,
+    required String itemtype,
+    required String description,
+    required Map<String, dynamic>
+        quantities, // Allow dynamic temporarily for casting
+    required double price,
+    required String imageUrl,
+    required String docId,
+  }) async {
+    StoreItemResponse storeItemResponse = StoreItemResponse();
+    DocumentReference documentReferencer = _Collection.doc(docId);
 
-  Map<String, dynamic> data = <String, dynamic>{
-    "itemname": name,
-    "category": category,
-    "quantity": quantity,
-    "price": price,
-  };
+    // Cast quantities to Map<String, int>
+    Map<String, int> castQuantities =
+        quantities.map((key, value) => MapEntry(key, value as int));
 
-  await documentReferencer.update(data).whenComplete(() {
-    storeItemResponse.code = 200;
-    storeItemResponse.message = "Successfully updated StoreItem";
-  }).catchError((e) {
-    storeItemResponse.code = 500;
-    storeItemResponse.message = e;
-  });
+    // Create a timestamp for the updated date & time
+    Timestamp timestamp = Timestamp.now();
 
-  return storeItemResponse;
-}
+    Map<String, dynamic> data = <String, dynamic>{
+      "itemname": name,
+      "category": category,
+      "itemtype": itemtype,
+      "description": description,
+      "quantities": castQuantities, // Use the casted quantities
+      "price": price,
+      "imageUrl": imageUrl,
+      "updatedAt": timestamp, // Update the timestamp for the updated time
+    };
 
+    await documentReferencer.update(data).whenComplete(() {
+      storeItemResponse.code = 200;
+      storeItemResponse.message = "Successfully updated StoreItem";
+    }).catchError((e) {
+      storeItemResponse.code = 500;
+      storeItemResponse.message = e;
+    });
 
-  //Delete storeitem record
+    return storeItemResponse;
+  }
 
+  // Delete storeitem record
   static Future<StoreItemResponse> deleteStoreItem({
     required String docId,
   }) async {
-    StoreItemResponse storeitemresponse = StoreItemResponse();
+    StoreItemResponse storeItemResponse = StoreItemResponse();
     DocumentReference documentReferencer = _Collection.doc(docId);
 
     await documentReferencer.delete().whenComplete(() {
-      storeitemresponse.code = 200;
-      storeitemresponse.message = "Sucessfully Deleted StoreItem";
+      storeItemResponse.code = 200;
+      storeItemResponse.message = "Successfully Deleted StoreItem";
     }).catchError((e) {
-      storeitemresponse.code = 500;
-      storeitemresponse.message = e;
+      storeItemResponse.code = 500;
+      storeItemResponse.message = e;
     });
 
-    return storeitemresponse;
+    return storeItemResponse;
   }
-
-  
 }

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../services/rental_application_crud.dart';
 import '../models/rental_application.dart';
 import 'rental_application_list_page.dart';
-import 'dart:async';
-
 
 class EditRentalApplication extends StatefulWidget {
   final RentalApplication rentalApplication;
@@ -79,6 +77,7 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
       ),
     );
 
+    // Update Button
     final updateButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -120,6 +119,7 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
       ),
     );
 
+    // View Applications Button
     final viewApplicationsButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -134,6 +134,44 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
         },
         child: Text(
           "View Applications",
+          style: TextStyle(color: Theme.of(context).primaryColorLight),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+
+    // Delete Button
+    final deleteButton = Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Colors.red,
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: () async {
+          var response = await RentalApplicationCrud.deleteRentalApplication(widget.rentalApplication.id!);
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text(response['message']),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => RentalApplicationListPage()),
+                      );
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Text(
+          "Delete Application",
           style: TextStyle(color: Theme.of(context).primaryColorLight),
           textAlign: TextAlign.center,
         ),
@@ -161,6 +199,8 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
                 driveLinkField,
                 const SizedBox(height: 15.0),
                 updateButton,
+                const SizedBox(height: 10.0),
+                deleteButton,  // Add delete button here
                 const SizedBox(height: 10.0),
                 viewApplicationsButton,
               ],

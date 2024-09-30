@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_mall_application/page/additem.dart';
@@ -9,6 +10,7 @@ import 'package:shopping_mall_application/page/home/incidentsection.dart';
 import 'package:shopping_mall_application/page/home/loyalty_section.dart'; // Import the LoyaltySection widget
 import 'package:shopping_mall_application/page/home/rental_application_card.dart'; // Import the RentalApplicationCard
 import 'package:shopping_mall_application/page/home/occupency_dashboard_section.dart'; // Import the DashboardCard widget
+import 'package:shopping_mall_application/auth_gate.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -51,20 +53,31 @@ class HomePage extends StatelessWidget {
               'Welcome!',
               style: Theme.of(context).textTheme.displaySmall,
             ),
-            const SignOutButton(),
-            SizedBox(height: 30), // Keep the spacing
+            const SizedBox(height: 30), // Keep the spacing
 
             // Incident Section
-            IncidentCard(), // Use the custom IncidentCard widget here
+            IncidentCard(), // Custom widget
 
             // Loyalty Section
-            LoyaltySection(), // Add the Loyalty Section here
+            LoyaltySection(), // Custom widget
 
             // Rental Application Section
-            RentalApplicationCard(), // Add the Rental Application Card
+            RentalApplicationCard(), // Custom widget
 
             // Dashboard Section
-            DashboardCard(), // Add the new DashboardCard widget here
+            DashboardCard(), // Custom widget
+
+            // Sign-Out Button
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut(); // Sign out using FirebaseAuth
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AuthGate()), // Navigate to AuthGate
+                );
+              },
+              child: const Text('Sign Out'),
+            ),
           ],
         ),
       ),

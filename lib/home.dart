@@ -11,6 +11,7 @@ import 'package:shopping_mall_application/page/home/loyalty_section.dart'; // Im
 import 'package:shopping_mall_application/page/home/rental_application_card.dart'; // Import the RentalApplicationCard
 import 'package:shopping_mall_application/page/home/occupency_dashboard_section.dart'; // Import the DashboardCard widget
 import 'package:shopping_mall_application/auth_gate.dart';
+import 'package:shopping_mall_application/page/promotionlistcustomer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -46,44 +47,60 @@ class HomeScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Image.asset('assets/images/ShoppingMateLogo.png'),
-            Text(
-              'Welcome!',
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            const SizedBox(height: 30), // Keep the spacing
+        child: Center(
+          child: Column(
+            children: [
+              Image.asset('assets/images/ShoppingMateLogo.png'),
+              Text(
+                'Welcome!',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SignOutButton(),
+              const SizedBox(height: 30), // Keep the spacing
+              IncidentCard(), // Use the custom IncidentCard widget here
+              LoyaltySection(), // Add the LoyaltySection widget here
+              const SizedBox(height: 20), // Add spacing between sections
+              SeePromotionCard(),
 
-            // Incident Section
-            IncidentCard(), // Custom widget
+              RentalApplicationCard(), // Custom widget
 
-            // Loyalty Section
-            LoyaltySection(), // Custom widget
-
-            // Rental Application Section
-            RentalApplicationCard(), // Custom widget
-
-            // Dashboard Section
-            DashboardCard(), // Custom widget
-
-            // Sign-Out Button
-            ElevatedButton(
-              onPressed: () async {
-                await FirebaseAuth.instance
-                    .signOut(); // Sign out using FirebaseAuth
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const AuthGate()), // Navigate to AuthGate
-                );
-              },
-              child: const Text('Sign Out'),
-            ),
-          ],
+              // Dashboard Section
+              DashboardCard(), // Add the Promotion card widget here
+            ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class SeePromotionCard extends StatelessWidget {
+  const SeePromotionCard({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        margin: const EdgeInsets.all(10.0),
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: ListTile(
+            contentPadding: const EdgeInsets.all(16.0),
+            leading: const Icon(Icons.local_offer, color: Colors.purple),
+            title: const Text(
+              'See Promotions',
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
+            subtitle: const Text('Check out the latest promotions and offers'),
+            trailing: Icon(Icons.arrow_forward,
+                color: Theme.of(context).primaryColor),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PromotionListCustomerPage(),
+                ),
+              );
+            }));
   }
 }

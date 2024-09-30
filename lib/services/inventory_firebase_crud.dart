@@ -5,85 +5,113 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _Collection = _firestore.collection('StoreItem');
 
 class FirebaseCrud {
-//CRUD method here
-
-//Add storeitem
+  // Add store item
   static Future<StoreItemResponse> addStoreItem({
     required String name,
-    required String position,
-    required String contactno,
+    required String category,
+    required String itemtype,
+    required String description,
+    required Map<String, int> quantities,
+    required double price,
+    required String imageUrl,
   }) async {
-    StoreItemResponse storeitemresponse = StoreItemResponse();
+    StoreItemResponse storeItemResponse = StoreItemResponse();
     DocumentReference documentReferencer = _Collection.doc();
 
+    // Create a timestamp for the created date & time
+    Timestamp timestamp = Timestamp.now();
+
+    // Data map with createdAt field
     Map<String, dynamic> data = <String, dynamic>{
-      "storeitem_name": name,
-      "position": position,
-      "contact_no": contactno
+      "itemname": name,
+      "category": category,
+      "itemtype": itemtype,
+      "description": description,
+      "quantities": quantities,
+      "price": price,
+      "imageUrl": imageUrl,
+      "createdAt": timestamp, // Timestamp for creation
+      "updatedAt": timestamp, // Initially, updatedAt is the same as createdAt
     };
 
-    var result = await documentReferencer.set(data).whenComplete(() {
-      storeitemresponse.code = 200;
-      storeitemresponse.message = "Sucessfully added to the database";
-    }).catchError((e) {
-      storeitemresponse.code = 500;
-      storeitemresponse.message = e;
-    });
+    try {
+      await documentReferencer.set(data);
+      storeItemResponse.code = 200;
+      storeItemResponse.message = "Successfully added to the database";
+    } catch (e) {
+      storeItemResponse.code = 500;
+      storeItemResponse.message = e.toString();
+    }
 
-    return storeitemresponse;
+    return storeItemResponse;
   }
 
-  //Read storeitem records
+  // Read storeitem records
   static Stream<QuerySnapshot> readStoreItem() {
-    CollectionReference notesItemCollection = _Collection;
-
-    return notesItemCollection.snapshots();
+    CollectionReference storeItemCollection =
+        FirebaseFirestore.instance.collection('StoreItem');
+    return storeItemCollection.snapshots();
   }
 
-  //Update storeitem record
-
+  // Update store item record
   static Future<StoreItemResponse> updateStoreItem({
     required String name,
-    required String position,
-    required String contactno,
+    required String category,
+    required String itemtype,
+    required String description,
+    required Map<String, dynamic>
+        quantities, // Allow dynamic temporarily for casting
+    required double price,
+    required String imageUrl,
     required String docId,
   }) async {
-    StoreItemResponse storeitemresponse = StoreItemResponse();
+    StoreItemResponse storeItemResponse = StoreItemResponse();
     DocumentReference documentReferencer = _Collection.doc(docId);
 
+    // Cast quantities to Map<String, int>
+    Map<String, int> castQuantities =
+        quantities.map((key, value) => MapEntry(key, value as int));
+
+    // Create a timestamp for the updated date & time
+    Timestamp timestamp = Timestamp.now();
+
     Map<String, dynamic> data = <String, dynamic>{
-      "storeitem_name": name,
-      "position": position,
-      "contact_no": contactno
+      "itemname": name,
+      "category": category,
+      "itemtype": itemtype,
+      "description": description,
+      "quantities": castQuantities, // Use the casted quantities
+      "price": price,
+      "imageUrl": imageUrl,
+      "updatedAt": timestamp, // Update the timestamp for the updated time
     };
 
     await documentReferencer.update(data).whenComplete(() {
-      storeitemresponse.code = 200;
-      storeitemresponse.message = "Sucessfully updated StoreItem";
+      storeItemResponse.code = 200;
+      storeItemResponse.message = "Successfully updated StoreItem";
     }).catchError((e) {
-      storeitemresponse.code = 500;
-      storeitemresponse.message = e;
+      storeItemResponse.code = 500;
+      storeItemResponse.message = e;
     });
 
-    return storeitemresponse;
+    return storeItemResponse;
   }
 
-  //Delete storeitem record
-
+  // Delete storeitem record
   static Future<StoreItemResponse> deleteStoreItem({
     required String docId,
   }) async {
-    StoreItemResponse storeitemresponse = StoreItemResponse();
+    StoreItemResponse storeItemResponse = StoreItemResponse();
     DocumentReference documentReferencer = _Collection.doc(docId);
 
     await documentReferencer.delete().whenComplete(() {
-      storeitemresponse.code = 200;
-      storeitemresponse.message = "Sucessfully Deleted StoreItem";
+      storeItemResponse.code = 200;
+      storeItemResponse.message = "Successfully Deleted StoreItem";
     }).catchError((e) {
-      storeitemresponse.code = 500;
-      storeitemresponse.message = e;
+      storeItemResponse.code = 500;
+      storeItemResponse.message = e;
     });
 
-    return storeitemresponse;
+    return storeItemResponse;
   }
 }

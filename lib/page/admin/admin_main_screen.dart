@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_mall_application/page/additem.dart';
 import 'package:shopping_mall_application/page/addpromotion.dart';
+import 'package:shopping_mall_application/page/addloyaltypoints.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -35,6 +36,13 @@ class AdminScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => AddPromotion()));
               },
               child: const Text('Create a Promotion'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddLoyaltyPoints()));
+              },
+              child: const Text('Add Loyalty Points'),
             ),
           ],
         ),

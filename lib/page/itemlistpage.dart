@@ -3,7 +3,6 @@ import '../models/storeitem.dart';
 import '/page/additem.dart';
 import '/page/edititem.dart';
 import 'package:flutter/material.dart';
-
 import '../services/inventory_firebase_crud.dart';
 
 class ItemListPage extends StatefulWidget {
@@ -51,6 +50,19 @@ class _ListPage extends State<ItemListPage> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ListView(
                 children: snapshot.data!.docs.map((e) {
+                  // Retrieve createdAt and updatedAt
+                  DateTime createdAt = (e['createdAt'] as Timestamp).toDate();
+                  DateTime updatedAt = (e['updatedAt'] as Timestamp).toDate();
+
+                  // Ensure quantities are correctly parsed as Map<String, int>
+                  Map<String, int> sizes = Map<String, int>.from(e['quantities'] ?? {
+                    'S': 0,
+                    'M': 0,
+                    'L': 0,
+                    'XL': 0,
+                    'XXL': 0
+                  });
+
                   return Card(
                     child: Column(
                       children: [
@@ -59,12 +71,39 @@ class _ListPage extends State<ItemListPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
+                              // Displaying item image
+                              e['imageUrl'] != null
+                                  ? Image.network(
+                                      e['imageUrl'],
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Container(
+                                      height: 100,
+                                      width: 100,
+                                      color: Colors.grey,
+                                      child: Icon(Icons.image, size: 50),
+                                    ),
+                              SizedBox(height: 10),
                               Text("Category: " + e['category'],
                                   style: const TextStyle(fontSize: 14)),
-                              Text("Quantity: " + e['quantity'].toString(),
+                              Text("Item Type: " + e['itemtype'],
+                                  style: const TextStyle(fontSize: 14)),
+                              Text("Price: Rs. " + e['price'].toString(),
                                   style: const TextStyle(fontSize: 12)),
-                              Text("Price: \$" + e['price'].toString(),
+                              Text("Quantities by Size: ",
                                   style: const TextStyle(fontSize: 12)),
+                              Text(
+                                  "S: ${sizes['S']}, M: ${sizes['M']}, L: ${sizes['L']}, XL: ${sizes['XL']}, XXL: ${sizes['XXL']}",
+                                  style: const TextStyle(fontSize: 12)),
+                              // Displaying description
+                              Text("Description: " + e['description'],
+                                  style: const TextStyle(fontSize: 12)),
+                              Text("Created At: " + createdAt.toString(),
+                                  style: const TextStyle(fontSize: 10)),
+                              Text("Updated At: " + updatedAt.toString(),
+                                  style: const TextStyle(fontSize: 10)),
                             ],
                           ),
                         ),
@@ -86,8 +125,12 @@ class _ListPage extends State<ItemListPage> {
                                         uid: e.id,
                                         itemname: e["itemname"],
                                         category: e["category"],
-                                        quantity: e["quantity"],
-                                        price: e["price"], name: null,
+                                        itemtype: e["itemtype"],
+                                        quantities: sizes,  // <-- Pass sizes here
+                                        price: e["price"],
+                                        description: e["description"],
+                                        imageUrl: e["imageUrl"],
+                                        name: null,
                                       ),
                                     ),
                                   ),

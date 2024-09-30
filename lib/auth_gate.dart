@@ -25,13 +25,13 @@ class AuthGate extends StatelessWidget {
               AuthStateChangeAction<SignedIn>((context, state) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               }),
               AuthStateChangeAction<UserCreated>((context, state) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               }),
               AuthStateChangeAction<SigningUp>((context, state) {
@@ -94,7 +94,7 @@ class AuthGate extends StatelessWidget {
           );
         }
 
-        return const HomeScreen();
+        return const HomePage();
       },
     );
   }

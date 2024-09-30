@@ -29,6 +29,12 @@ class _IncidentListPage extends State<IncidentListPage> {
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
+            icon: Icon(Icons.download, color: Colors.white),
+            onPressed: () async {
+              await _generateAndDownloadAllIncidentsPDF();
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.app_registration, color: Colors.white),
             onPressed: () {
               Navigator.pushAndRemoveUntil<dynamic>(
@@ -250,6 +256,50 @@ class _IncidentListPage extends State<IncidentListPage> {
 
     final pdfBytes = await pdf.save();
     await Printing.sharePdf(bytes: pdfBytes, filename: '$name.pdf');
+  }
+
+  Future<void> _generateAndDownloadAllIncidentsPDF() async {
+    final pdf = pw.Document();
+    final incidents = await FirebaseCrud.readIncident().first;
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: incidents.docs.map((e) {
+              return pw.Container(
+                margin: const pw.EdgeInsets.only(bottom: 20),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(e["name"] ?? 'No Name',
+                        style: pw.TextStyle(fontSize: 24)),
+                    pw.SizedBox(height: 10),
+                    pw.Text(
+                        "Description: ${e['description'] ?? 'No Description'}",
+                        style: pw.TextStyle(fontSize: 18)),
+                    pw.Text("Date: ${e['date'] ?? 'No Date'}",
+                        style: pw.TextStyle(fontSize: 18)),
+                    pw.Text("Location: ${e['location'] ?? 'No Location'}",
+                        style: pw.TextStyle(fontSize: 18)),
+                    pw.Text(
+                        "Contact Number: ${e['contactNumber'] ?? 'No Contact Number'}",
+                        style: pw.TextStyle(fontSize: 18)),
+                    pw.Text("Status: ${e['status'] ?? 'No Status'}",
+                        style: pw.TextStyle(fontSize: 18)),
+                    pw.Divider(),
+                  ],
+                ),
+              );
+            }).toList(),
+          );
+        },
+      ),
+    );
+
+    final pdfBytes = await pdf.save();
+    await Printing.sharePdf(bytes: pdfBytes, filename: 'All_Incidents.pdf');
   }
 }
 

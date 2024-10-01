@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopping_mall_application/page/additem.dart';
 import 'package:shopping_mall_application/page/addpromotion.dart';
+import 'package:shopping_mall_application/page/addloyaltypoints.dart';
 
 import 'package:shopping_mall_application/page/admin/admin_incident_list_page.dart';
 
@@ -59,6 +60,14 @@ class AdminScreen extends StatelessWidget {
 
             ElevatedButton(
               onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddLoyaltyPoints()));
+              },
+              child: const Text('Add Loyalty Points'),
+
+
+            ElevatedButton(
+              onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -108,6 +117,7 @@ class AdminScreen extends StatelessWidget {
                 );
               },
               child: const Text('Sign Out'),
+
 
             ),
           ],

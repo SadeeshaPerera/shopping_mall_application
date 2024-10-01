@@ -9,7 +9,7 @@ import '../models/incident.dart';
 class EditIncident extends StatefulWidget {
   final Incident incident;
 
-  EditIncident({required this.incident});
+  const EditIncident({super.key, required this.incident});
 
   @override
   _EditIncidentState createState() => _EditIncidentState();
@@ -69,6 +69,7 @@ class _EditIncidentState extends State<EditIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -84,6 +85,7 @@ class _EditIncidentState extends State<EditIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 25.0),
@@ -114,12 +116,13 @@ class _EditIncidentState extends State<EditIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Date",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0)),
-        suffixIcon: Icon(Icons.calendar_today),
+        suffixIcon: const Icon(Icons.calendar_today),
       ),
     );
 
@@ -130,6 +133,7 @@ class _EditIncidentState extends State<EditIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -185,6 +189,7 @@ class _EditIncidentState extends State<EditIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
     );
 
@@ -193,7 +198,7 @@ class _EditIncidentState extends State<EditIncident> {
         Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) => IncidentListPage(),
+            builder: (BuildContext context) => const IncidentListPage(),
           ),
           (route) => false, // To disable back feature set to false
         );
@@ -231,7 +236,7 @@ class _EditIncidentState extends State<EditIncident> {
                         Navigator.pushReplacementNamed(
                             context, '/listPage'); // Navigate to the list page
                       },
-                      child: Text('OK'),
+                      child: const Text('OK'),
                     ),
                   ],
                 );
@@ -254,7 +259,7 @@ class _EditIncidentState extends State<EditIncident> {
             const Text('Edit Incident', style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },

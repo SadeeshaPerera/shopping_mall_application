@@ -6,6 +6,8 @@ import 'package:flutter/services.dart'; // For input validation
 import '../services/incident_firebase_crud.dart';
 
 class AddIncident extends StatefulWidget {
+  const AddIncident({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _AddIncident();
@@ -69,6 +71,7 @@ class _AddIncident extends State<AddIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -84,6 +87,7 @@ class _AddIncident extends State<AddIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 25.0),
@@ -114,12 +118,13 @@ class _AddIncident extends State<AddIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Date",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0)),
-        suffixIcon: Icon(Icons.calendar_today),
+        suffixIcon: const Icon(Icons.calendar_today),
       ),
     );
 
@@ -130,6 +135,7 @@ class _AddIncident extends State<AddIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -197,6 +203,7 @@ class _AddIncident extends State<AddIncident> {
         if (value == null || value.trim().isEmpty) {
           return 'This field is required';
         }
+        return null;
       },
     );
 
@@ -205,7 +212,7 @@ class _AddIncident extends State<AddIncident> {
         Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) => IncidentListPage(),
+            builder: (BuildContext context) => const IncidentListPage(),
           ),
           (route) => false, // To disable back feature set to false
         );

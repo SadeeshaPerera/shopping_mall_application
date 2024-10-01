@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+
+import 'package:shopping_mall_application/page/itemlistpage.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shopping_mall_application/page/additem.dart';
+// import 'package:shopping_mall_application/page/additem.dart';
+
 import 'package:shopping_mall_application/page/addpromotion.dart';
 import 'package:shopping_mall_application/page/addloyaltypoints.dart';
 
@@ -35,12 +39,10 @@ class AdminScreen extends StatelessWidget {
             // Button to add an inventory item
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          AddItem()), // Navigate to AddItem page
-                );
+
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ItemListPage()));
+
               },
               child: const Text('Add an Inventory Item'),
             ),
@@ -48,12 +50,14 @@ class AdminScreen extends StatelessWidget {
             // Button to create a promotion
             ElevatedButton(
               onPressed: () {
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
                           AddPromotion()), // Navigate to AddPromotion page
                 );
+
               },
               child: const Text('Create a Promotion'),
             ),

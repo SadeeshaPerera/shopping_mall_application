@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
@@ -10,6 +9,8 @@ import '/page/editincident.dart';
 import '../services/incident_firebase_crud.dart';
 
 class IncidentListPage extends StatefulWidget {
+  const IncidentListPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _IncidentListPage();
@@ -29,12 +30,12 @@ class _IncidentListPage extends State<IncidentListPage> {
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.app_registration, color: Colors.white),
+            icon: const Icon(Icons.app_registration, color: Colors.white),
             onPressed: () {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddIncident(),
+                  builder: (BuildContext context) => const AddIncident(),
                 ),
                 (route) => false, // Disable back feature
               );
@@ -99,16 +100,16 @@ class _IncidentListPage extends State<IncidentListPage> {
                                 ),
                               ),
                             ),
-                            ButtonBar(
+                            OverflowBar(
                               alignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
                                     backgroundColor: Colors.blue,
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 8),
-                                    textStyle: TextStyle(fontSize: 16),
+                                    textStyle: const TextStyle(fontSize: 16),
                                   ),
                                   child: const Text('Update'),
                                   onPressed: () {
@@ -142,10 +143,10 @@ class _IncidentListPage extends State<IncidentListPage> {
                                     foregroundColor: const Color.fromARGB(
                                         255, 255, 255, 255),
                                     backgroundColor: Colors.red,
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 8),
-                                    textStyle: TextStyle(fontSize: 16),
-                                    side: BorderSide(
+                                    textStyle: const TextStyle(fontSize: 16),
+                                    side: const BorderSide(
                                         color: Colors.red), // Border color
                                   ),
                                   child: const Text('Remove'),
@@ -231,16 +232,16 @@ class _IncidentListPage extends State<IncidentListPage> {
             child: pw.Column(
               mainAxisAlignment: pw.MainAxisAlignment.center,
               children: [
-                pw.Text(name, style: pw.TextStyle(fontSize: 24)),
+                pw.Text(name, style: const pw.TextStyle(fontSize: 24)),
                 pw.SizedBox(height: 20),
                 pw.Text("Description: $description",
-                    style: pw.TextStyle(fontSize: 18)),
-                pw.Text("Date: $date", style: pw.TextStyle(fontSize: 18)),
+                    style: const pw.TextStyle(fontSize: 18)),
+                pw.Text("Date: $date", style: const pw.TextStyle(fontSize: 18)),
                 pw.Text("Location: $location",
-                    style: pw.TextStyle(fontSize: 18)),
+                    style: const pw.TextStyle(fontSize: 18)),
                 pw.Text("Contact Number: $contactNumber",
-                    style: pw.TextStyle(fontSize: 18)),
-                pw.Text("Status: $status", style: pw.TextStyle(fontSize: 18)),
+                    style: const pw.TextStyle(fontSize: 18)),
+                pw.Text("Status: $status", style: const pw.TextStyle(fontSize: 18)),
               ],
             ),
           );
@@ -253,4 +254,4 @@ class _IncidentListPage extends State<IncidentListPage> {
   }
 }
 
-void main() => runApp(MaterialApp(home: IncidentListPage()));
+void main() => runApp(const MaterialApp(home: IncidentListPage()));

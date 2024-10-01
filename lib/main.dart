@@ -2,8 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'auth_gate.dart';
-import '/page/addincident.dart';
-import '/page/additem.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +35,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('Shopping Mate')),
+        title: const Center(child: Text('Shopping Mate')),
       ),
       body: const Center(
         child: Text('Hello, World!'),

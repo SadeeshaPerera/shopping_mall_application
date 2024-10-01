@@ -4,6 +4,8 @@ import 'package:intl/intl.dart'; // For date formatting
 import '../services/promotion_firebase_crud.dart';
 
 class AddPromotion extends StatefulWidget {
+  const AddPromotion({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _AddPage();
@@ -120,18 +122,19 @@ class _AddPage extends State<AddPromotion> {
       ),
     );
 
-    final viewListButton = TextButton(
-      onPressed: () {
-        Navigator.pushAndRemoveUntil<dynamic>(
-          context,
-          MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) => PromotionListPage(),
-          ),
-          (route) => false, // To disable back feature set to false
-        );
-      },
-      child: const Text('View List of Promotions'),
-    );
+
+    final viewListbutton = TextButton(
+        onPressed: () {
+          Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => const PromotionListPage(),
+            ),
+            (route) => false, //To disable back feature set to false
+          );
+        },
+        child: const Text('View List of Promotions'));
+
 
     final saveButton = Material(
       elevation: 5.0,

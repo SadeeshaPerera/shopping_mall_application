@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../services/contract_firebase_crud.dart';
 
 class AddContract extends StatefulWidget {
+  const AddContract({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -27,6 +29,7 @@ class _AddPage extends State<AddContract> {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
+          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -40,6 +43,7 @@ class _AddPage extends State<AddContract> {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
+          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -53,6 +57,7 @@ class _AddPage extends State<AddContract> {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
+          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -65,7 +70,7 @@ class _AddPage extends State<AddContract> {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => ContractListPage(),
+              builder: (BuildContext context) => const ContractListPage(),
             ),
             (route) => false, //To disable back feature set to false
           );

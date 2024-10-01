@@ -6,7 +6,7 @@ import '../services/promotion_firebase_crud.dart';
 
 class PromotionEditPage extends StatefulWidget {
   final Promotion? promotion;
-  PromotionEditPage({this.promotion});
+  const PromotionEditPage({super.key, this.promotion});
 
   @override
   State<StatefulWidget> createState() {
@@ -54,6 +54,7 @@ class _EditPage extends State<PromotionEditPage> {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
+          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -67,6 +68,7 @@ class _EditPage extends State<PromotionEditPage> {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
+          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -80,6 +82,7 @@ class _EditPage extends State<PromotionEditPage> {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
+          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -92,7 +95,7 @@ class _EditPage extends State<PromotionEditPage> {
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => PromotionListPage(),
+              builder: (BuildContext context) => const PromotionListPage(),
             ),
             (route) => false, //if you want to disable back feature set to false
           );

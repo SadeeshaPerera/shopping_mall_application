@@ -1,9 +1,5 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopping_mall_application/page/additem.dart';
-import 'package:shopping_mall_application/page/addcontract.dart';
-import 'package:shopping_mall_application/page/addpromotion.dart';
-import 'package:shopping_mall_application/page/admin/admin_main_screen.dart';
 import 'package:shopping_mall_application/page/home/incidentsection.dart';
 import 'package:shopping_mall_application/page/home/loyalty_section.dart'; // Import the LoyaltySection widget
 
@@ -30,7 +26,7 @@ class HomeScreen extends StatelessWidget {
                         Navigator.of(context).pop();
                       })
                     ],
-                    children: [],
+                    children: const [],
                   ),
                 ),
               );
@@ -50,9 +46,9 @@ class HomeScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.displaySmall,
               ),
               const SignOutButton(),
-              SizedBox(height: 30), // Keep the spacing
-              IncidentCard(), // Use the custom IncidentCard widget here
-              LoyaltySection(), // Add the LoyaltySection widget here
+              const SizedBox(height: 30), // Keep the spacing
+              const IncidentCard(), // Use the custom IncidentCard widget here
+              const LoyaltySection(), // Add the LoyaltySection widget here
             ],
           ),
 

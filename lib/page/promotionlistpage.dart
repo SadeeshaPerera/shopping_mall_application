@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import '../services/promotion_firebase_crud.dart';
 
 class PromotionListPage extends StatefulWidget {
+  const PromotionListPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
@@ -26,7 +28,7 @@ class _ListPage extends State<PromotionListPage> {
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.app_registration,
               color: Colors.white,
             ),
@@ -34,7 +36,7 @@ class _ListPage extends State<PromotionListPage> {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddPromotion(),
+                  builder: (BuildContext context) => const AddPromotion(),
                 ),
                 (route) =>
                     false, //if you want to disable back feature set to false
@@ -67,7 +69,7 @@ class _ListPage extends State<PromotionListPage> {
                         )),
                       ),
                     ),
-                    ButtonBar(
+                    OverflowBar(
                       alignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         TextButton(

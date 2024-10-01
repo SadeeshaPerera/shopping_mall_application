@@ -14,7 +14,8 @@ class PromotionListPage extends StatefulWidget {
 }
 
 class _ListPage extends State<PromotionListPage> {
-  final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readPromotion();
+  final Stream<QuerySnapshot> collectionReference =
+      FirebaseCrud.readPromotion();
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +165,8 @@ class _ListPage extends State<PromotionListPage> {
                                     ),
                                     child: const Text('Delete'),
                                     onPressed: () {
-                                      _showDeleteConfirmationDialog(context, e.id);
+                                      _showDeleteConfirmationDialog(
+                                          context, e.id);
                                     },
                                   ),
                                 ],
@@ -202,7 +204,8 @@ class _ListPage extends State<PromotionListPage> {
             ),
             TextButton(
               onPressed: () async {
-                var promotionresponse = await FirebaseCrud.deletePromotion(docId: docId);
+                var promotionresponse =
+                    await FirebaseCrud.deletePromotion(docId: docId);
                 Navigator.of(context).pop(); // Close the dialog
 
                 // Show success or error message

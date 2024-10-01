@@ -1,11 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:flutter/material.dart';
+import 'dart:typed_data';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
+import '../services/inventory_firebase_crud.dart';
 import '../models/storeitem.dart';
+
 import '/page/additem.dart';
 import '/page/edititem.dart';
-import 'package:flutter/material.dart';
-import '../services/inventory_firebase_crud.dart';
+import 'package:printing/printing.dart'; // For displaying/printing PDFs in web
 
 class ItemListPage extends StatefulWidget {
+  const ItemListPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
@@ -13,33 +21,45 @@ class ItemListPage extends StatefulWidget {
 }
 
 class _ListPage extends State<ItemListPage> {
-  // Reference to the Firestore collection
   final Stream<QuerySnapshot> collectionReference =
       FirebaseCrud.readStoreItem();
-
+  //FirebaseFirestore.instance.collection('StoreItem').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Inventory Details"),
+        title: const Text("List of StoreItem"),
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+
+            icon: const Icon(
               Icons.add,
+
               color: Colors.white,
             ),
             onPressed: () {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddItem(),
+                  builder: (BuildContext context) => const AddItem(),
                 ),
-                (route) => false, // Disable back feature if necessary
+
+                (route) => false,
+
               );
             },
-          )
+          ),
+          IconButton(
+              icon: const Icon(
+                Icons.picture_as_pdf,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                generatePdfReport(
+                    context); // Call the PDF generation function inside a function
+              })
         ],
       ),
       body: StreamBuilder(
@@ -50,20 +70,14 @@ class _ListPage extends State<ItemListPage> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ListView(
                 children: snapshot.data!.docs.map((e) {
-                  // Retrieve createdAt and updatedAt
                   DateTime createdAt = (e['createdAt'] as Timestamp).toDate();
                   DateTime updatedAt = (e['updatedAt'] as Timestamp).toDate();
-
-                  // Ensure quantities are correctly parsed as Map<String, int>
-                  Map<String, int> sizes = Map<String, int>.from(e['quantities'] ?? {
-                    'S': 0,
-                    'M': 0,
-                    'L': 0,
-                    'XL': 0,
-                    'XXL': 0
-                  });
+                  Map<String, int> sizes = Map<String, int>.from(
+                      e['quantities'] ??
+                          {'S': 0, 'M': 0, 'L': 0, 'XL': 0, 'XXL': 0});
 
                   return Card(
+
                     child: Column(
                       children: [
                         ListTile(
@@ -71,7 +85,6 @@ class _ListPage extends State<ItemListPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              // Displaying item image
                               e['imageUrl'] != null
                                   ? Image.network(
                                       e['imageUrl'],
@@ -83,31 +96,30 @@ class _ListPage extends State<ItemListPage> {
                                       height: 100,
                                       width: 100,
                                       color: Colors.grey,
-                                      child: Icon(Icons.image, size: 50),
+                                      child: const Icon(Icons.image, size: 50),
                                     ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text("Category: " + e['category'],
                                   style: const TextStyle(fontSize: 14)),
                               Text("Item Type: " + e['itemtype'],
                                   style: const TextStyle(fontSize: 14)),
-                              Text("Price: Rs. " + e['price'].toString(),
+                              Text("Price: Rs. ${e['price']}",
                                   style: const TextStyle(fontSize: 12)),
-                              Text("Quantities by Size: ",
-                                  style: const TextStyle(fontSize: 12)),
+                              const Text("Quantities by Size: ",
+                                  style: TextStyle(fontSize: 12)),
                               Text(
                                   "S: ${sizes['S']}, M: ${sizes['M']}, L: ${sizes['L']}, XL: ${sizes['XL']}, XXL: ${sizes['XXL']}",
                                   style: const TextStyle(fontSize: 12)),
-                              // Displaying description
                               Text("Description: " + e['description'],
                                   style: const TextStyle(fontSize: 12)),
-                              Text("Created At: " + createdAt.toString(),
+                              Text("Created At: $createdAt",
                                   style: const TextStyle(fontSize: 10)),
-                              Text("Updated At: " + updatedAt.toString(),
+                              Text("Updated At: $updatedAt",
                                   style: const TextStyle(fontSize: 10)),
                             ],
                           ),
                         ),
-                        ButtonBar(
+                        OverflowBar(
                           alignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             TextButton(
@@ -126,7 +138,7 @@ class _ListPage extends State<ItemListPage> {
                                         itemname: e["itemname"],
                                         category: e["category"],
                                         itemtype: e["itemtype"],
-                                        quantities: sizes,  // <-- Pass sizes here
+                                        quantities: sizes,
                                         price: e["price"],
                                         description: e["description"],
                                         imageUrl: e["imageUrl"],
@@ -158,21 +170,170 @@ class _ListPage extends State<ItemListPage> {
                                       );
                                     },
                                   );
+                                } else if (storeItemResponse.code == 200) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      content: Text(
+                                          storeItemResponse.message.toString()),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 }
                               },
                             ),
+
                           ],
+                        )),
+                      ),
+                    ),
+                    ButtonBar(
+                      alignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.all(5.0),
+                            // primary: const Color.fromARGB(255, 143, 133, 226),
+                            textStyle: const TextStyle(fontSize: 20),
+                          ),
+                          child: const Text('Edit'),
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil<dynamic>(
+                              context,
+                              MaterialPageRoute<dynamic>(
+                                builder: (BuildContext context) => EditItem(
+                                  storeitem: StoreItem(
+                                      uid: e.id,
+                                      storeitemname: e["storeitem_name"],
+                                      position: e["position"],
+                                      contactno: e["contact_no"]),
+                                ),
+                              ),
+                              (route) =>
+                                  false, //if you want to disable back feature set to false
+                            );
+                          },
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.all(5.0),
+                            // primary: const Color.fromARGB(255, 143, 133, 226),
+                            textStyle: const TextStyle(fontSize: 20),
+                          ),
+                          child: const Text('Delete'),
+                          onPressed: () async {
+                            var storeitemresponse =
+                                await FirebaseCrud.deleteStoreItem(docId: e.id);
+                            if (storeitemresponse.code != 200) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Text(
+                                          storeitemresponse.message.toString()),
+                                    );
+                                  });
+                            }
+                          },
                         ),
                       ],
                     ),
-                  );
+                  ]));
                 }).toList(),
               ),
             );
           }
-          return Center(child: CircularProgressIndicator());
+
+          return const Center(child: CircularProgressIndicator());
+
         },
       ),
     );
+  }
+
+  Future<void> generatePdfReport(BuildContext context) async {
+    // Display a loading snackbar to inform the user
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Generating PDF report...')),
+    );
+
+    // Create a PDF document
+    final pdf = pw.Document();
+
+    try {
+      // Fetch data from Firestore and check if it's successfully fetched
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('StoreItem').get();
+
+      if (snapshot.docs.isEmpty) {
+        // Display a snackbar to inform there is no data
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No items found in inventory!')),
+        );
+        return; // Stop if there's no data
+      }
+
+      // Print for debugging to ensure data fetching works
+      print('Data fetched successfully: ${snapshot.docs.length} items found.');
+
+      // Create the PDF content
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text('Inventory Report',
+                    style: pw.TextStyle(
+                        fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 20),
+                pw.Table.fromTextArray(
+                  headers: [
+                    'Item Name',
+                    'Category',
+                    'Item Type',
+                    'Price (Rs.)'
+                  ],
+                  data: snapshot.docs.map((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+
+                    // Return the row data for the PDF table
+                    return [
+                      data['itemname'] ?? 'Unknown',
+                      data['category'] ?? 'Unknown',
+                      data['itemtype'] ?? 'Unknown',
+                      data['price']?.toString() ?? '0',
+                    ];
+                  }).toList(),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+
+      // Display a preview of the generated PDF or allow download/print
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save(),
+      );
+
+      // Inform the user that the PDF was generated successfully
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('PDF report generated successfully!')),
+      );
+    } catch (e) {
+      // Handle errors and inform the user if something goes wrong
+      print('Error generating PDF: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error generating PDF report')),
+      );
+    }
   }
 }

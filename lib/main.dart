@@ -1,12 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
-import 'auth_gate.dart';
-import '/page/addincident.dart';
-import '/page/additem.dart';
+
+import 'auth_gate.dart'; // Make sure to import your authentication gate or main screen
+import 'home.dart'; // Import your app's main home widget
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase with options for the current platform
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -20,16 +23,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Simple Flutter App',
+      title: 'Rental Application',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AuthGate(),
+      home: const AuthGate(), // Change to your app's initial screen
     );
   }
 }
 
+// You can remove MyHomePage if it's not being used elsewhere
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
@@ -37,7 +41,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('Shopping Mate')),
+        title: const Center(child: Text('Shopping Mate')),
       ),
       body: const Center(
         child: Text('Hello, World!'),

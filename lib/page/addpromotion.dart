@@ -1,34 +1,30 @@
 import '/page/promotionlistpage.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // For date formatting
+
 import '../services/promotion_firebase_crud.dart';
 import '/page/admin/admin_main_screen.dart';
 
 class AddPromotion extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
+    // TODO: implement createState
     return _AddPage();
   }
 }
 
 class _AddPage extends State<AddPromotion> {
-  final _shop_name = TextEditingController();
-  final _promotion_date = TextEditingController();
-  final _picture_url = TextEditingController();
+  final _promotion_name = TextEditingController();
+  final _promotion_position = TextEditingController();
+  final _promotion_contact = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  void dispose() {
-    _shop_name.dispose();
-    _promotion_date.dispose();
-    _picture_url.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final double fieldWidth = MediaQuery.of(context).size.width > 600 ? 400 : MediaQuery.of(context).size.width * 0.9;
+
+    final double fieldWidth = MediaQuery.of(context).size.width > 600
+        ? 400
+        : MediaQuery.of(context).size.width * 0.9;
 
     Widget shadowedField(Widget child) {
       return Container(
@@ -52,25 +48,22 @@ class _AddPage extends State<AddPromotion> {
     final shopNameField = shadowedField(
       TextFormField(
         controller: _shop_name,
+
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
-          return null;
         },
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Shop Name",
-          border: InputBorder.none, // No outline border
-        ),
-      ),
-    );
-
-    final dateField = shadowedField(
-      TextFormField(
-        controller: _promotion_date,
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Promotion Name",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+    final positionField = TextFormField(
+        controller: _promotion_position,
         autofocus: false,
+
         readOnly: true,
         onTap: () async {
           DateTime? pickedDate = await showDatePicker(
@@ -81,23 +74,26 @@ class _AddPage extends State<AddPromotion> {
           );
           if (pickedDate != null) {
             setState(() {
-              _promotion_date.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+              _promotion_date.text =
+                  DateFormat('yyyy-MM-dd').format(pickedDate);
             });
           }
         },
+
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
-          return null;
         },
         decoration: InputDecoration(
+
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Date",
           border: InputBorder.none, // No outline border
           suffixIcon: Icon(
             Icons.calendar_today,
-            color: const Color.fromARGB(255, 129, 136, 135), // Set calendar icon color to purple
+            color: const Color.fromARGB(
+                255, 129, 136, 135), // Set calendar icon color to purple
           ),
         ),
       ),
@@ -106,65 +102,61 @@ class _AddPage extends State<AddPromotion> {
     final pictureField = shadowedField(
       TextFormField(
         controller: _picture_url,
+
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return 'This field is required';
           }
-          return null;
         },
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Picture URL",
-          border: InputBorder.none, // No outline border
-        ),
-      ),
-    );
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Percentage Discount",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
-    final viewListButton = TextButton(
-      onPressed: () {
-        Navigator.pushAndRemoveUntil<dynamic>(
-          context,
-          MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) => PromotionListPage(),
-          ),
-          (route) => false, // To disable back feature set to false
-        );
-      },
-      child: const Text('View List of Promotions'),
-    );
+    final viewListbutton = TextButton(
+        onPressed: () {
+          Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => PromotionListPage(),
+            ),
+            (route) => false, //To disable back feature set to false
+          );
+        },
+        child: const Text('View List of Promotions'));
 
-    final saveButton = Material(
+    final SaveButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
       child: MaterialButton(
-        minWidth: 150, // Adjusted width for the Save button
+        minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             var promotionresponse = await FirebaseCrud.addPromotion(
-              shopName: _shop_name.text,
-              date: _promotion_date.text,
-              pictureUrl: _picture_url.text,
-            );
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Promotion Added Successfully'),
-                  content: Text(promotionresponse.message.toString()),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                );
-              },
-            );
+                name: _promotion_name.text,
+                position: _promotion_position.text,
+                contactno: _promotion_contact.text);
+            if (promotionresponse.code != 200) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text(promotionresponse.message.toString()),
+                    );
+                  });
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text(promotionresponse.message.toString()),
+                    );
+                  });
+            }
           }
         },
         child: Text(
@@ -178,15 +170,17 @@ class _AddPage extends State<AddPromotion> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Add Promotion'),
+        title: const Text('Promotions Mangement '),
         backgroundColor: Theme.of(context).primaryColor,
+
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pushAndRemoveUntil<dynamic>(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (BuildContext context) => const AdminScreen(), // Navigate to AdminScreen
+                builder: (BuildContext context) =>
+                    const AdminScreen(), // Navigate to AdminScreen
               ),
               (route) => false, // Disable back feature
             );
@@ -198,7 +192,8 @@ class _AddPage extends State<AddPromotion> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 20.0), // Adds space between the AppBar and the form
+              SizedBox(
+                  height: 20.0), // Adds space between the AppBar and the form
               Container(
                 padding: const EdgeInsets.all(20.0),
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -241,10 +236,11 @@ class _AddPage extends State<AddPromotion> {
                     ),
                   ],
                 ),
+
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

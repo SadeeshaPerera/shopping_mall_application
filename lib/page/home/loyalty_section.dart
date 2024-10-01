@@ -14,10 +14,14 @@ class LoyaltySection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
+            const Center(
               child: Padding(
+
+                
+
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: const Text(
+
                   'Join Our Loyalty Program',
                   style: TextStyle(
                     fontSize: 20,

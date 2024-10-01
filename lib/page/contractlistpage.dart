@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import '../services/contract_firebase_crud.dart';
 
 class ContractListPage extends StatefulWidget {
+  const ContractListPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
@@ -25,7 +27,7 @@ class _ListPage extends State<ContractListPage> {
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.app_registration,
               color: Colors.white,
             ),
@@ -33,7 +35,7 @@ class _ListPage extends State<ContractListPage> {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddContract(),
+                  builder: (BuildContext context) => const AddContract(),
                 ),
                 (route) =>
                     false, //if you want to disable back feature set to false
@@ -66,7 +68,7 @@ class _ListPage extends State<ContractListPage> {
                         )),
                       ),
                     ),
-                    ButtonBar(
+                    OverflowBar(
                       alignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         TextButton(

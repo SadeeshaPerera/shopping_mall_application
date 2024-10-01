@@ -6,7 +6,7 @@ import '../services/promotion_firebase_crud.dart';
 
 class PromotionEditPage extends StatefulWidget {
   final Promotion? promotion;
-  PromotionEditPage({this.promotion});
+  const PromotionEditPage({super.key, this.promotion});
 
   @override
   State<StatefulWidget> createState() {
@@ -25,14 +25,77 @@ class _EditPage extends State<PromotionEditPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    _docid.value = TextEditingValue(text: widget.promotion!.uid.toString());
-    _promotion_name.value =
-        TextEditingValue(text: widget.promotion!.promotionname.toString());
-    _promotion_position.value =
-        TextEditingValue(text: widget.promotion!.position.toString());
-    _promotion_contact.value =
-        TextEditingValue(text: widget.promotion!.contactno.toString());
+
+    super.initState();
+    _docIdController.value =
+        TextEditingValue(text: widget.promotion!.uid.toString());
+    _shopNameController.value =
+        TextEditingValue(text: widget.promotion!.shopName.toString());
+    _dateController.value =
+        TextEditingValue(text: widget.promotion!.date.toString());
+    _pictureUrlController.value =
+        TextEditingValue(text: widget.promotion!.pictureUrl.toString());
+  }
+
+  Widget shadowedField(Widget child) {
+    return Container(
+      width: MediaQuery.of(context).size.width > 600
+          ? 400
+          : MediaQuery.of(context).size.width * 0.9,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(32.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+
+  void _showUpdateDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "Update Status",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(fontSize: 16.0),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                "OK",
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (BuildContext context) => PromotionListPage(),
+                  ),
+                  (route) => false, // Remove all previous routes
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+
   }
 
   @override
@@ -69,12 +132,17 @@ class _EditPage extends State<PromotionEditPage> {
           }
         },
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Position",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-    final contactField = TextFormField(
-        controller: _promotion_contact,
+
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Date",
+          border: InputBorder.none,
+        ),
+      ),
+    );
+
+    final pictureUrlField = shadowedField(TextFormField(
+        controller: _pictureUrlController,
+
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -84,8 +152,22 @@ class _EditPage extends State<PromotionEditPage> {
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             hintText: "Contact Number",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(32.0)))));
+
+    final viewListbutton = TextButton(
+        onPressed: () {
+          Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => const PromotionListPage(),
+            ),
+            (route) => false, //if you want to disable back feature set to false
+          );
+        },
+        child: const Text('View List of Promotion'));
+
 
     final viewListbutton = TextButton(
         onPressed: () {

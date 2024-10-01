@@ -9,12 +9,16 @@ class EditItem extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    // TODO: implement createState
     return _EditItem();
   }
 }
 
 class _EditItem extends State<EditItem> {
   final _storeitem_name = TextEditingController();
+
+ 
+
   final _storeitem_description = TextEditingController();
   final _storeitem_price = TextEditingController();
   final _storeitem_quantity_s = TextEditingController();
@@ -23,6 +27,7 @@ class _EditItem extends State<EditItem> {
   final _storeitem_quantity_xl = TextEditingController();
   final _storeitem_quantity_xxl = TextEditingController();
   final _storeitem_image_url = TextEditingController();
+
   final _docid = TextEditingController();
 
   // Dropdown values
@@ -35,6 +40,7 @@ class _EditItem extends State<EditItem> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+
  @override
 void initState() {
   super.initState();
@@ -130,10 +136,12 @@ void initState() {
     final saveButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
+
       color: Theme.of(context).primaryColor,
       child: MaterialButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
+
             // Ensure quantities are correctly parsed as integers
             var response = await FirebaseCrud.updateStoreItem(
               docId: _docid.text,
@@ -153,6 +161,7 @@ void initState() {
               imageUrl: _storeitem_image_url.text,
             );
             _showResponseDialog(context, response.message ?? "Default message");
+
           }
         },
         child: const Text("Update", style: TextStyle(color: Colors.white)),
@@ -160,6 +169,7 @@ void initState() {
     );
 
     return Scaffold(
+
       appBar: AppBar(title: const Text('Update Item')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -233,6 +243,7 @@ void initState() {
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (_) => const ItemListPage()));
             },
+
           ),
         ],
       ),

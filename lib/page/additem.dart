@@ -7,12 +7,14 @@ class AddItem extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    // TODO: implement createState
     return _AddItem();
   }
 }
 
 class _AddItem extends State<AddItem> {
   final _storeitem_name = TextEditingController();
+
   final _storeitem_description = TextEditingController();
   final _storeitem_price = TextEditingController();
   final _storeitem_quantity_s = TextEditingController();
@@ -21,6 +23,7 @@ class _AddItem extends State<AddItem> {
   final _storeitem_quantity_xl = TextEditingController();
   final _storeitem_quantity_xxl = TextEditingController();
   final _storeitem_image_url = TextEditingController();
+
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -42,6 +45,7 @@ class _AddItem extends State<AddItem> {
 
   @override
   Widget build(BuildContext context) {
+
     final nameField = _buildTextFormField(_storeitem_name, "Item Name");
     final descriptionField =
         _buildTextFormField(_storeitem_description, "Description");
@@ -178,10 +182,12 @@ class _AddItem extends State<AddItem> {
     return Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
+
       color: Theme.of(context).primaryColor,
       child: MaterialButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
+
             // Save the item with all new fields including dropdown values
             var response = await FirebaseCrud.addStoreItem(
               name: _storeitem_name.text,
@@ -199,12 +205,14 @@ class _AddItem extends State<AddItem> {
               imageUrl: _storeitem_image_url.text,
             );
             _showResponseDialog(context, response.message ?? "Default message");
+
           }
         },
         child: const Text("Save", style: TextStyle(color: Colors.white)),
       ),
     );
   }
+
 
   void _showResponseDialog(BuildContext context, String message) {
     showDialog(
@@ -218,6 +226,7 @@ class _AddItem extends State<AddItem> {
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (_) => const ItemListPage()));
             },
+
           ),
         ],
       ),

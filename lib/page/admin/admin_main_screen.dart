@@ -25,6 +25,7 @@ class AdminScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
       ),
+
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 600) {
@@ -164,6 +165,7 @@ class AdminScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 16.0)),
               ],
+
             ),
           ),
         ),

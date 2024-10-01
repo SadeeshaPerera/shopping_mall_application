@@ -14,8 +14,7 @@ class RentalApplicationListPage extends StatefulWidget {
 
 class _RentalApplicationListPage extends State<RentalApplicationListPage> {
   // Initialize a StreamController to manage the stream of rental applications
-  final StreamController<List<RentalApplication>> _streamController =
-      StreamController<List<RentalApplication>>();
+  final StreamController<List<RentalApplication>> _streamController = StreamController<List<RentalApplication>>();
 
   @override
   void initState() {
@@ -44,14 +43,12 @@ class _RentalApplicationListPage extends State<RentalApplicationListPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Rental Applications",
-            style: TextStyle(color: Colors.white)),
+        title: const Text("Rental Applications", style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: StreamBuilder<List<RentalApplication>>(
         stream: _streamController.stream,
-        builder: (BuildContext context,
-            AsyncSnapshot<List<RentalApplication>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<RentalApplication>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
@@ -69,6 +66,7 @@ class _RentalApplicationListPage extends State<RentalApplicationListPage> {
             child: ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
+                print(snapshot.data![index].status);
                 RentalApplication rentalApplication = snapshot.data![index];
 
                 return Padding(
@@ -76,15 +74,13 @@ class _RentalApplicationListPage extends State<RentalApplicationListPage> {
                   child: Center(
                     child: Card(
                       child: ListTile(
-                        title:
-                            Text(rentalApplication.userName ?? 'No User Name'),
+                        title: Text(rentalApplication.userName ?? 'No User Name'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                                "Shop Type: ${rentalApplication.shopType ?? 'N/A'}"),
-                            Text(
-                                "Drive Link: ${rentalApplication.driveLink ?? 'N/A'}"),
+                            Text("Shop Type: ${rentalApplication.shopType ?? 'N/A'}"),
+                            Text("Drive Link: ${rentalApplication.driveLink ?? 'N/A'}"),
+                            Text("Status: ${rentalApplication.status}"),
                           ],
                         ),
                         trailing: IconButton(
@@ -93,8 +89,7 @@ class _RentalApplicationListPage extends State<RentalApplicationListPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EditRentalApplication(
-                                    rentalApplication: rentalApplication),
+                                builder: (context) => EditRentalApplication(rentalApplication: rentalApplication),
                               ),
                             );
                           },

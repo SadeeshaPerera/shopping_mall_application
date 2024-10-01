@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
+
 import '/models/incident.dart';
 import '/page/addincident.dart';
 import '/page/editincident.dart';
+import 'package:flutter/material.dart';
+
 import '../services/incident_firebase_crud.dart';
 
 class IncidentListPage extends StatefulWidget {
@@ -19,7 +23,7 @@ class IncidentListPage extends StatefulWidget {
 
 class _IncidentListPage extends State<IncidentListPage> {
   final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readIncident();
-
+  //FirebaseFirestore.instance.collection('Incident').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +32,8 @@ class _IncidentListPage extends State<IncidentListPage> {
         title: const Text("Reported Incidents",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
+
+
 
 
       ),
@@ -175,6 +181,7 @@ class _IncidentListPage extends State<IncidentListPage> {
                                                 false, // Disable back feature
                                           );
                                         },
+
                                       ),
                                       OutlinedButton(
                                         style: OutlinedButton.styleFrom(
@@ -249,6 +256,7 @@ class _IncidentListPage extends State<IncidentListPage> {
                           ),
                         );
                       }).toList(),
+
                     ),
                   );
                 }
@@ -261,6 +269,7 @@ class _IncidentListPage extends State<IncidentListPage> {
       ),
     );
   }
+
 
   void _generateAndDownloadPDF(
       BuildContext context,
@@ -346,3 +355,4 @@ class _IncidentListPage extends State<IncidentListPage> {
 }
 
 void main() => runApp(const MaterialApp(home: IncidentListPage()));
+

@@ -34,9 +34,7 @@ class DashboardCard extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            Dashboard()), // Navigate to the dashboard page
+                    MaterialPageRoute(builder: (context) => Dashboard()), // Navigate to the dashboard page
                   );
                 },
                 child: const Text('Open My Dashboard'),

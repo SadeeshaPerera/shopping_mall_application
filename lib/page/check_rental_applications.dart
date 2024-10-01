@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shopping_mall_application/utils.dart';
 
 class CheckRentalApplications extends StatelessWidget {
   const CheckRentalApplications({Key? key}) : super(key: key);
@@ -8,17 +9,18 @@ class CheckRentalApplications extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser?.uid;
-
+    final isAdmin = AppUtils.isAdminUser(FirebaseAuth.instance.currentUser?.email ?? '');
+    print("User ID: $userId");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rental Applications'),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('rental_applications')
-            .where('userId',
-                isEqualTo:
-                    userId) // Adjust this line if you want to filter by user ID
+        stream: isAdmin
+          ? FirebaseFirestore.instance.collection('rentalApplications').snapshots()
+          : FirebaseFirestore.instance
+            .collection('rentalApplications')
+            .where('userId', isEqualTo: userId) // Adjust this line if you want to filter by user ID
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,9 +46,8 @@ class CheckRentalApplications extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        data['shopName'] ?? 'Unnamed Shop',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                        data['shopType'] ?? 'Unnamed Shop',
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       Text("Category: ${data['category'] ?? 'N/A'}"),
                       Text("Drive Link: ${data['driveLink'] ?? 'N/A'}"),
@@ -58,25 +59,41 @@ class CheckRentalApplications extends StatelessWidget {
                           ElevatedButton(
                             onPressed: data['status'] == "Pending"
                                 ? () {
-                                    FirebaseFirestore.instance
-                                        .collection('rental_applications')
-                                        .doc(doc.id)
-                                        .update({'status': 'Approved'});
-                                  }
+                              FirebaseFirestore.instance
+                                  .collection('rentalApplications')
+                                  .doc(doc.id)
+                                  .update({'status': 'Approved'});
+                            }
                                 : null, // Disable button if already approved or rejected
-                            child: const Text("Approve"),
+                                style: ButtonStyle(
+                                  backgroundColor: WidgetStateProperty.resolveWith((states) {
+                                    if (states.contains(WidgetState.disabled)) {
+                                      return Colors.grey;
+                                    }
+                                    return Colors.green;
+                                  }),
+                                ),
+                            child: const Text("Approve", style: TextStyle(color: Colors.white)),
                           ),
                           const SizedBox(width: 10),
                           ElevatedButton(
                             onPressed: data['status'] == "Pending"
                                 ? () {
-                                    FirebaseFirestore.instance
-                                        .collection('rental_applications')
-                                        .doc(doc.id)
-                                        .update({'status': 'Rejected'});
-                                  }
+                              FirebaseFirestore.instance
+                                  .collection('rentalApplications')
+                                  .doc(doc.id)
+                                  .update({'status': 'Rejected'});
+                            }
                                 : null, // Disable button if already approved or rejected
-                            child: const Text("Reject"),
+                                style: ButtonStyle(
+                                  backgroundColor: WidgetStateProperty.resolveWith((states) {
+                                    if (states.contains(WidgetState.disabled)) {
+                                      return Colors.grey;
+                                    }
+                                    return Colors.red;
+                                  }),
+                                ),
+                            child: const Text("Reject", style: TextStyle(color: Colors.white)),
                           ),
                         ],
                       ),

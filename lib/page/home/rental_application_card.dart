@@ -34,9 +34,7 @@ class RentalApplicationCard extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            RentalApplication()), // Navigate to the rental application page
+                    MaterialPageRoute(builder: (context) => RentalApplication()), // Navigate to the rental application page
                   );
                 },
                 child: const Text('Submit Application'),

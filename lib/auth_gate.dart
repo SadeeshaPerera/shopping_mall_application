@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'; // new
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
+import 'package:shopping_mall_application/utils.dart';
 
-import 'home.dart';
+import 'home.dart'; // Ensure this points to the file where HomeScreen is defined
 import 'registration_screen.dart';
 import './page/admin/admin_main_screen.dart';
 
@@ -19,19 +20,27 @@ class AuthGate extends StatelessWidget {
           return SignInScreen(
             providers: [
               EmailAuthProvider(),
-              GoogleProvider(clientId: "YOUR_WEBCLIENT_ID"), // new
+              GoogleProvider(clientId: "YOUR_WEBCLIENT_ID"),
             ],
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
+                if (AppUtils.isAdminUser(state.user!.email!)) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AdminScreen()),
+                  );
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
+                }
               }),
               AuthStateChangeAction<UserCreated>((context, state) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               }),
               AuthStateChangeAction<SigningUp>((context, state) {
@@ -93,8 +102,10 @@ class AuthGate extends StatelessWidget {
             },
           );
         }
-
-        return const HomeScreen();
+        if (AppUtils.isAdminUser(snapshot.data!.email!)) {
+          return const AdminScreen();
+        }
+        return const HomePage(); // Ensure this refers to the correct class
       },
     );
   }

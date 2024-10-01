@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_mall_application/page/loyaltymemberdetails.dart';
 
 class LoyaltySection extends StatelessWidget {
   const LoyaltySection({super.key});
@@ -15,8 +16,12 @@ class LoyaltySection extends StatelessWidget {
           children: [
             const Center(
               child: Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Text(
+
+                
+
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: const Text(
+
                   'Join Our Loyalty Program',
                   style: TextStyle(
                     fontSize: 20,
@@ -34,7 +39,12 @@ class LoyaltySection extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Add your loyalty program action here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoyaltyMemberForm(),
+                    ),
+                  );
                 },
                 child: const Text('Join Now'),
               ),

@@ -23,18 +23,14 @@ class AdminScreen extends StatelessWidget {
               'Welcome to the Admin Page!',
               style: TextStyle(fontSize: 24),
             ),
-            const SizedBox(
-                height:
-                    20), // Add some spacing between the text and the buttons
+            const SizedBox(height: 20), // Add some spacing between the text and the buttons
 
             // Button to add an inventory item
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          AddItem()), // Navigate to AddItem page
+                  MaterialPageRoute(builder: (context) => AddItem()), // Navigate to AddItem page
                 );
               },
               child: const Text('Add an Inventory Item'),
@@ -45,9 +41,7 @@ class AdminScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          AddPromotion()), // Navigate to AddPromotion page
+                  MaterialPageRoute(builder: (context) => AddPromotion()), // Navigate to AddPromotion page
                 );
               },
               child: const Text('Create a Promotion'),
@@ -58,9 +52,7 @@ class AdminScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          CheckRentalApplications()), // Navigate to CheckRentalApplications page
+                  MaterialPageRoute(builder: (context) => CheckRentalApplications()), // Navigate to CheckRentalApplications page
                 );
               },
               child: const Text('Check Rental Applications'),
@@ -71,16 +63,13 @@ class AdminScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MaintenanceRequestListPage()), // Navigate to MaintenanceRequestListPage
+                  MaterialPageRoute(builder: (context) => MaintenanceRequestListPage()), // Navigate to MaintenanceRequestListPage
                 );
               },
               child: const Text('View Maintenance Requests'),
             ),
 
-            const SizedBox(
-                height: 20), // Add some spacing before the sign-out button
+            const SizedBox(height: 20), // Add some spacing before the sign-out button
 
             // Sign-Out Button
             ElevatedButton(
@@ -88,9 +77,7 @@ class AdminScreen extends StatelessWidget {
                 await FirebaseAuth.instance.signOut(); // Sign out from Firebase
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const AuthGate()), // Navigate back to the sign-in page
+                  MaterialPageRoute(builder: (context) => const AuthGate()), // Navigate back to the sign-in page
                 );
               },
               child: const Text('Sign Out'),

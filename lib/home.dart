@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +12,13 @@ import 'package:shopping_mall_application/page/home/loyalty_section.dart'; // Im
 import 'package:shopping_mall_application/page/home/rental_application_card.dart'; // Import the RentalApplicationCard
 import 'package:shopping_mall_application/page/home/occupency_dashboard_section.dart'; // Import the DashboardCard widget
 import 'package:shopping_mall_application/auth_gate.dart';
-import 'package:shopping_mall_application/page/promotionlistcustomer.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text('ShoppingMate Home'),
@@ -27,7 +28,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute<ProfileScreen>(
+                MaterialPageRoute(
                   builder: (context) => ProfileScreen(
                     appBar: AppBar(
                       title: const Text('User Profile'),
@@ -47,60 +48,57 @@ class HomeScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              Image.asset('assets/images/ShoppingMateLogo.png'),
-              Text(
-                'Welcome!',
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-              const SignOutButton(),
-              const SizedBox(height: 30), // Keep the spacing
-              IncidentCard(), // Use the custom IncidentCard widget here
-              LoyaltySection(), // Add the LoyaltySection widget here
-              const SizedBox(height: 20), // Add spacing between sections
-              SeePromotionCard(),
+        child: Column(
+          children: [
+            Image.asset('assets/images/ShoppingMateLogo.png'),
+            Text(
+              'Welcome!',
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+            const SizedBox(height: 30), // Keep the spacing
 
-              RentalApplicationCard(), // Custom widget
+            // Incident Section
+            IncidentCard(), // Custom widget
 
-              // Dashboard Section
-              DashboardCard(), // Add the Promotion card widget here
-            ],
-          ),
+            // Loyalty Section
+            LoyaltySection(), // Custom widget
+
+            // Rental Application Section
+            RentalApplicationCard(), // Custom widget
+
+            // Dashboard Section
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                .collection('rentalApplications')
+                .where('userId', isEqualTo: userId) // Adjust this line if you want to filter by user ID
+                .where('status', isEqualTo: 'Approved') // Adjust this line if you want to filter by status
+                .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text("Error: ${snapshot.error}"));
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const SizedBox(); // Return an empty widget if there's no data
+                }
+                return DashboardCard();
+              }
+            ), // Custom widget
+
+            // Sign-Out Button
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut(); // Sign out using FirebaseAuth
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AuthGate()), // Navigate to AuthGate
+                );
+              },
+              child: const Text('Sign Out'),
+            ),
+          ],
         ),
       ),
     );
-  }
-}
-
-class SeePromotionCard extends StatelessWidget {
-  const SeePromotionCard({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-        margin: const EdgeInsets.all(10.0),
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: ListTile(
-            contentPadding: const EdgeInsets.all(16.0),
-            leading: const Icon(Icons.local_offer, color: Colors.purple),
-            title: const Text(
-              'See Promotions',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-            subtitle: const Text('Check out the latest promotions and offers'),
-            trailing: Icon(Icons.arrow_forward,
-                color: Theme.of(context).primaryColor),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PromotionListCustomerPage(),
-                ),
-              );
-            }));
   }
 }

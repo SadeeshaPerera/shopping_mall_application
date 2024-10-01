@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MaintenanceFirebaseCrud {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  static const String _collection =
-      'MaintenanceRequests'; // Your collection name
+  static const String _collection = 'maintenanceRequests'; // Your collection name
 
   // Method to read maintenance requests
   static Stream<QuerySnapshot> readMaintenanceRequests() {
@@ -11,11 +10,10 @@ class MaintenanceFirebaseCrud {
   }
 
   // Method to add a maintenance request
-  static Future<Response> addMaintenanceRequest(
-      String requestDescription) async {
+  static Future<Response> addMaintenanceRequest(String requestDescription) async {
     try {
       await _firestore.collection(_collection).add({
-        'request_description': requestDescription,
+        'request': requestDescription,
         'status': 'Pending', // Default status
         'created_at': FieldValue.serverTimestamp(), // Optional: timestamp
       });
@@ -26,8 +24,7 @@ class MaintenanceFirebaseCrud {
   }
 
   // Method to delete a maintenance request
-  static Future<Response> deleteMaintenanceRequest(
-      {required String docId}) async {
+  static Future<Response> deleteMaintenanceRequest({required String docId}) async {
     try {
       await _firestore.collection(_collection).doc(docId).delete();
       return Response(code: 200, message: 'Request deleted successfully');

@@ -84,8 +84,7 @@ class _RentalApplicationState extends State<RentalApplication> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  content: Text(response['message']
-                      .toString()), // Access the message correctly
+                  content: Text(response['message'].toString()), // Access the message correctly
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -116,8 +115,7 @@ class _RentalApplicationState extends State<RentalApplication> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) => RentalApplicationListPage()),
+            MaterialPageRoute(builder: (context) => RentalApplicationListPage()),
           );
         },
         child: Text(
@@ -130,8 +128,7 @@ class _RentalApplicationState extends State<RentalApplication> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rental Application',
-            style: TextStyle(color: Colors.white)),
+        title: const Text('Rental Application', style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SingleChildScrollView(

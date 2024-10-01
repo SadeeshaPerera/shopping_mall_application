@@ -7,76 +7,66 @@ final CollectionReference _Collection = _firestore.collection('StoreItem');
 class FirebaseCrud {
 //CRUD method here
 
-// Add store item
-static Future<StoreItemResponse> addStoreItem({
-  required String name,
-  required String category,
-  required int quantity,
-  required int price,
-}) async {
-  StoreItemResponse storeItemResponse = StoreItemResponse();
-  DocumentReference documentReferencer = _Collection.doc(); // Make sure _Collection refers to your "StoreItem" Firestore collection.
+//Add storeitem
+  static Future<StoreItemResponse> addStoreItem({
+    required String name,
+    required String position,
+    required String contactno,
+  }) async {
+    StoreItemResponse storeitemresponse = StoreItemResponse();
+    DocumentReference documentReferencer = _Collection.doc();
 
-  // Correct the data map
-  Map<String, dynamic> data = <String, dynamic>{
-    "itemname": name,
-    "category": category,
-    "quantity": quantity, // Added quantity field
-    "price": price        // Added price field
-  };
+    Map<String, dynamic> data = <String, dynamic>{
+      "storeitem_name": name,
+      "position": position,
+      "contact_no": contactno
+    };
 
-  // Try saving to Firestore
-  try {
-    await documentReferencer.set(data);
-    storeItemResponse.code = 200;
-    storeItemResponse.message = "Successfully added to the database";
-  } catch (e) {
-    storeItemResponse.code = 500;
-    storeItemResponse.message = e.toString();
+    var result = await documentReferencer.set(data).whenComplete(() {
+      storeitemresponse.code = 200;
+      storeitemresponse.message = "Sucessfully added to the database";
+    }).catchError((e) {
+      storeitemresponse.code = 500;
+      storeitemresponse.message = e;
+    });
+
+    return storeitemresponse;
   }
 
-  return storeItemResponse;
-}
+  //Read storeitem records
+  static Stream<QuerySnapshot> readStoreItem() {
+    CollectionReference notesItemCollection = _Collection;
 
+    return notesItemCollection.snapshots();
+  }
 
- // Read storeitem records
-static Stream<QuerySnapshot> readStoreItem() {
-  // Reference to the StoreItem collection in Firestore
-  CollectionReference storeItemCollection = FirebaseFirestore.instance.collection('StoreItem');
+  //Update storeitem record
 
-  // Return a stream of snapshots for real-time updates
-  return storeItemCollection.snapshots();
-}
+  static Future<StoreItemResponse> updateStoreItem({
+    required String name,
+    required String position,
+    required String contactno,
+    required String docId,
+  }) async {
+    StoreItemResponse storeitemresponse = StoreItemResponse();
+    DocumentReference documentReferencer = _Collection.doc(docId);
 
-  // Update store item record
-static Future<StoreItemResponse> updateStoreItem({
-  required String name,
-  required String category,
-  required int quantity,
-  required int price,
-  required String docId,
-}) async {
-  StoreItemResponse storeItemResponse = StoreItemResponse();
-  DocumentReference documentReferencer = _Collection.doc(docId);
+    Map<String, dynamic> data = <String, dynamic>{
+      "storeitem_name": name,
+      "position": position,
+      "contact_no": contactno
+    };
 
-  Map<String, dynamic> data = <String, dynamic>{
-    "itemname": name,
-    "category": category,
-    "quantity": quantity,
-    "price": price,
-  };
+    await documentReferencer.update(data).whenComplete(() {
+      storeitemresponse.code = 200;
+      storeitemresponse.message = "Sucessfully updated StoreItem";
+    }).catchError((e) {
+      storeitemresponse.code = 500;
+      storeitemresponse.message = e;
+    });
 
-  await documentReferencer.update(data).whenComplete(() {
-    storeItemResponse.code = 200;
-    storeItemResponse.message = "Successfully updated StoreItem";
-  }).catchError((e) {
-    storeItemResponse.code = 500;
-    storeItemResponse.message = e;
-  });
-
-  return storeItemResponse;
-}
-
+    return storeitemresponse;
+  }
 
   //Delete storeitem record
 
@@ -96,6 +86,4 @@ static Future<StoreItemResponse> updateStoreItem({
 
     return storeitemresponse;
   }
-
-  
 }

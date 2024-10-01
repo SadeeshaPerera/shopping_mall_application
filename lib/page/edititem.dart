@@ -10,117 +10,96 @@ class EditItem extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    // TODO: implement createState
     return _EditItem();
   }
 }
 
 class _EditItem extends State<EditItem> {
   final _storeitem_name = TextEditingController();
-  final _storeitem_category = TextEditingController();
-  final _storeitem_quantity = TextEditingController();
-  final _storeitem_price = TextEditingController();
+  final _storeitem_position = TextEditingController();
+  final _storeitem_contact = TextEditingController();
   final _docid = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    super.initState();
+    // TODO: implement initState
     _docid.value = TextEditingValue(text: widget.storeitem!.uid.toString());
-    _storeitem_name.value = TextEditingValue(text: widget.storeitem!.itemname.toString());
-    _storeitem_category.value = TextEditingValue(text: widget.storeitem!.category.toString());
-    _storeitem_quantity.value = TextEditingValue(text: widget.storeitem!.quantity.toString());
-    _storeitem_price.value = TextEditingValue(text: widget.storeitem!.price.toString());
+    _storeitem_name.value =
+        TextEditingValue(text: widget.storeitem!.storeitemname.toString());
+    _storeitem_position.value =
+        TextEditingValue(text: widget.storeitem!.position.toString());
+    _storeitem_contact.value =
+        TextEditingValue(text: widget.storeitem!.contactno.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     final DocIDField = TextField(
-      controller: _docid,
-      readOnly: true,
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Document ID",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-      ),
-    );
+        controller: _docid,
+        readOnly: true,
+        autofocus: false,
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Name",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final nameField = TextFormField(
-      controller: _storeitem_name,
-      autofocus: false,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'This field is required';
-        }
-      },
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Item Name",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-      ),
-    );
+        controller: _storeitem_name,
+        autofocus: false,
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return 'This field is required';
+          }
+        },
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Name",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+    final positionField = TextFormField(
+        controller: _storeitem_position,
+        autofocus: false,
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return 'This field is required';
+          }
+        },
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Position",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+    final contactField = TextFormField(
+        controller: _storeitem_contact,
+        autofocus: false,
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return 'This field is required';
+          }
+        },
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Contact Number",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
-    final categoryField = TextFormField(
-      controller: _storeitem_category,
-      autofocus: false,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'This field is required';
-        }
-      },
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Category",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-      ),
-    );
+    final viewListbutton = TextButton(
+        onPressed: () {
+          Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => ItemListPage(),
+            ),
+            (route) => false, //if you want to disable back feature set to false
+          );
+        },
+        child: const Text('View List of StoreItem'));
 
-    final quantityField = TextFormField(
-      controller: _storeitem_quantity,
-      keyboardType: TextInputType.number,
-      autofocus: false,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'This field is required';
-        }
-      },
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Quantity",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-      ),
-    );
-
-    final priceField = TextFormField(
-      controller: _storeitem_price,
-      keyboardType: TextInputType.number,
-      autofocus: false,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'This field is required';
-        }
-      },
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Price",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-      ),
-    );
-
-    final viewListButton = TextButton(
-      onPressed: () {
-        Navigator.pushAndRemoveUntil<dynamic>(
-          context,
-          MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) => ItemListPage(),
-          ),
-          (route) => false,
-        );
-      },
-      child: const Text('View List of Store Items'),
-    );
-
-    final saveButton = Material(
+    final SaveButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -130,30 +109,26 @@ class _EditItem extends State<EditItem> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             var storeitemresponse = await FirebaseCrud.updateStoreItem(
-              name: _storeitem_name.text,
-              category: _storeitem_category.text,
-              quantity: int.parse(_storeitem_quantity.text),
-              price: int.parse(_storeitem_price.text),
-              docId: _docid.text,
-            );
+                name: _storeitem_name.text,
+                position: _storeitem_position.text,
+                contactno: _storeitem_contact.text,
+                docId: _docid.text);
             if (storeitemresponse.code != 200) {
               showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Text(storeitemresponse.message.toString()),
-                  );
-                },
-              );
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text(storeitemresponse.message.toString()),
+                    );
+                  });
             } else {
               showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Text(storeitemresponse.message.toString()),
-                  );
-                },
-              );
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text(storeitemresponse.message.toString()),
+                    );
+                  });
             }
           }
         },
@@ -168,7 +143,7 @@ class _EditItem extends State<EditItem> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Edit Store Item'),
+        title: const Text('Inventory Management'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(
@@ -186,14 +161,12 @@ class _EditItem extends State<EditItem> {
                   const SizedBox(height: 25.0),
                   nameField,
                   const SizedBox(height: 25.0),
-                  categoryField,
-                  const SizedBox(height: 25.0),
-                  quantityField,
-                  const SizedBox(height: 25.0),
-                  priceField,
-                  viewListButton,
+                  positionField,
+                  const SizedBox(height: 35.0),
+                  contactField,
+                  viewListbutton,
                   const SizedBox(height: 45.0),
-                  saveButton,
+                  SaveButon,
                   const SizedBox(height: 15.0),
                 ],
               ),

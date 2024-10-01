@@ -14,7 +14,6 @@ import 'package:shopping_mall_application/page/check_rental_applications.dart'; 
 import 'package:shopping_mall_application/page/maintenance_request_list_page.dart'; // Import the MaintenanceRequestList page
 import 'package:shopping_mall_application/auth_gate.dart'; // Import your authentication gate
 
-
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
 
@@ -39,10 +38,10 @@ class AdminScreen extends StatelessWidget {
             // Button to add an inventory item
             ElevatedButton(
               onPressed: () {
-
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ItemListPage()));
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ItemListPage()));
               },
               child: const Text('Add an Inventory Item'),
             ),
@@ -50,26 +49,25 @@ class AdminScreen extends StatelessWidget {
             // Button to create a promotion
             ElevatedButton(
               onPressed: () {
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
                           AddPromotion()), // Navigate to AddPromotion page
                 );
-
               },
               child: const Text('Create a Promotion'),
             ),
 
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddLoyaltyPoints()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddLoyaltyPoints()));
               },
               child: const Text('Add Loyalty Points'),
-
-
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -78,8 +76,7 @@ class AdminScreen extends StatelessWidget {
                         builder: (context) => AdminIncidentListPage()));
               },
               child: const Text('View Reported Incidents'),
-
-
+            ),
             // Button to check rental applications
             ElevatedButton(
               onPressed: () {
@@ -121,8 +118,6 @@ class AdminScreen extends StatelessWidget {
                 );
               },
               child: const Text('Sign Out'),
-
-
             ),
           ],
         ),

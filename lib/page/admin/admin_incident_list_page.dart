@@ -243,6 +243,26 @@ class _AdminIncidentListPage extends State<AdminIncidentListPage> {
                   );
                 },
               ),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.orange,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  textStyle: const TextStyle(fontSize: 16),
+                  side: const BorderSide(color: Colors.orange), // Border color
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.notifications, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text('Notify'),
+                  ],
+                ),
+                onPressed: () {
+                  _triggerNotificationForAllUsers(e["name"] ?? 'No Name');
+                },
+              ),
             ],
           ),
         ],
@@ -330,5 +350,12 @@ class _AdminIncidentListPage extends State<AdminIncidentListPage> {
 
     final pdfBytes = await pdf.save();
     await Printing.sharePdf(bytes: pdfBytes, filename: 'All_Incidents.pdf');
+  }
+
+  Future<void> _triggerNotificationForAllUsers(String incidentName) async {
+    // Implement your notification logic here
+    // For example, you can use Firebase Cloud Messaging (FCM) to send notifications to all users
+    // This is a placeholder implementation
+    print('Notification triggered for incident: $incidentName');
   }
 }

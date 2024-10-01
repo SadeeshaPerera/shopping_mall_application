@@ -1,149 +1,198 @@
 import 'itemlistpage.dart';
 import 'package:flutter/material.dart';
-
 import '../services/inventory_firebase_crud.dart';
 
 class AddItem extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _AddItem();
   }
 }
 
 class _AddItem extends State<AddItem> {
   final _storeitem_name = TextEditingController();
-  final _storeitem_position = TextEditingController();
-  final _storeitem_contact = TextEditingController();
+  final _storeitem_description = TextEditingController();
+  final _storeitem_price = TextEditingController();
+  final _storeitem_quantity_s = TextEditingController();
+  final _storeitem_quantity_m = TextEditingController();
+  final _storeitem_quantity_l = TextEditingController();
+  final _storeitem_quantity_xl = TextEditingController();
+  final _storeitem_quantity_xxl = TextEditingController();
+  final _storeitem_image_url = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  // Dropdown values
+  String? _selectedCategory;
+  String? _selectedItemType;
+
+  final List<String> _categories = ['Women', 'Men', 'Kids'];
+  final List<String> _itemTypes = [
+    'Dress',
+    'Pant',
+    'Trouser',
+    'T-shirt',
+    'Shirt',
+    'Blouse',
+    'Skirt',
+    'Denim'
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final nameField = TextFormField(
-        controller: _storeitem_name,
-        autofocus: false,
-        validator: (value) {
-          if (value == null || value.trim().isEmpty) {
-            return 'This field is required';
-          }
-        },
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Item Name",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-    final positionField = TextFormField(
-        controller: _storeitem_position,
-        autofocus: false,
-        validator: (value) {
-          if (value == null || value.trim().isEmpty) {
-            return 'This field is required';
-          }
-        },
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Item Category",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-    final contactField = TextFormField(
-        controller: _storeitem_contact,
-        autofocus: false,
-        validator: (value) {
-          if (value == null || value.trim().isEmpty) {
-            return 'This field is required';
-          }
-        },
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Item Provider",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+    final nameField = _buildTextFormField(_storeitem_name, "Item Name");
+    final descriptionField =
+        _buildTextFormField(_storeitem_description, "Description");
+    final priceField =
+        _buildTextFormField(_storeitem_price, "Price", isNumber: true);
 
-    final viewListbutton = TextButton(
-        onPressed: () {
-          Navigator.pushAndRemoveUntil<dynamic>(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => ItemListPage(),
-            ),
-            (route) => false, //To disable back feature set to false
-          );
-        },
-        child: const Text('View List of Store Items'));
+    // Dropdown for Category
+    final categoryField = DropdownButtonFormField<String>(
+      value: _selectedCategory,
+      decoration: InputDecoration(
+        hintText: "Select Category",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      onChanged: (newValue) => setState(() => _selectedCategory = newValue),
+      validator: (value) => value == null ? 'Please select a category' : null,
+      items: _categories.map((category) {
+        return DropdownMenuItem(
+          value: category,
+          child: Text(category),
+        );
+      }).toList(),
+    );
 
-    final SaveButon = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Theme.of(context).primaryColor,
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () async {
-          if (_formKey.currentState!.validate()) {
-            var storeitemresponse = await FirebaseCrud.addStoreItem(
-                name: _storeitem_name.text,
-                position: _storeitem_position.text,
-                contactno: _storeitem_contact.text);
-            if (storeitemresponse.code != 200) {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: Text(storeitemresponse.message.toString()),
-                    );
-                  });
-            } else {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: Text(storeitemresponse.message.toString()),
-                    );
-                  });
-            }
-          }
-        },
-        child: Text(
-          "Save",
-          style: TextStyle(color: Theme.of(context).primaryColorLight),
-          textAlign: TextAlign.center,
+    // Dropdown for Item Type
+    final itemTypeField = DropdownButtonFormField<String>(
+      value: _selectedItemType,
+      decoration: InputDecoration(
+        hintText: "Select Item Type",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      onChanged: (newValue) => setState(() => _selectedItemType = newValue),
+      validator: (value) => value == null ? 'Please select an item type' : null,
+      items: _itemTypes.map((itemType) {
+        return DropdownMenuItem(
+          value: itemType,
+          child: Text(itemType),
+        );
+      }).toList(),
+    );
+
+    // Quantity fields for sizes
+    final sizeFields = Column(
+      children: [
+        _buildTextFormField(_storeitem_quantity_s, "Quantity (S)",
+            isNumber: true),
+        _buildTextFormField(_storeitem_quantity_m, "Quantity (M)",
+            isNumber: true),
+        _buildTextFormField(_storeitem_quantity_l, "Quantity (L)",
+            isNumber: true),
+        _buildTextFormField(_storeitem_quantity_xl, "Quantity (XL)",
+            isNumber: true),
+        _buildTextFormField(_storeitem_quantity_xxl, "Quantity (XXL)",
+            isNumber: true),
+      ],
+    );
+
+    final imageUrlField =
+        _buildTextFormField(_storeitem_image_url, "Image URL");
+
+    final viewListButton = _buildViewListButton(context);
+    final saveButton = _buildSaveButton(context);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Add New Store Item')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              nameField,
+              const SizedBox(height: 15),
+              categoryField,
+              const SizedBox(height: 15),
+              itemTypeField,
+              const SizedBox(height: 15),
+              descriptionField,
+              const SizedBox(height: 15),
+              priceField,
+              const SizedBox(height: 15),
+              sizeFields,
+              const SizedBox(height: 15),
+              imageUrlField,
+              const SizedBox(height: 25),
+              viewListButton,
+              const SizedBox(height: 25),
+              saveButton,
+            ],
+          ),
         ),
       ),
     );
+  }
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Inventory Management'),
-        backgroundColor: Theme.of(context).primaryColor,
+  TextFormField _buildTextFormField(
+      TextEditingController controller, String hint,
+      {bool isNumber = false}) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      decoration: InputDecoration(
+          hintText: hint,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+      validator: (value) => value == null || value.trim().isEmpty
+          ? 'This field is required'
+          : null,
+    );
+  }
+
+  TextButton _buildViewListButton(BuildContext context) {
+    return TextButton(
+      onPressed: () => Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => ItemListPage())),
+      child: const Text('View List of Store Items'),
+    );
+  }
+
+  Material _buildSaveButton(BuildContext context) {
+    return Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(10),
+      color: Theme.of(context).primaryColor,
+      child: MaterialButton(
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            // Save the item with all new fields including dropdown values
+            var response = await FirebaseCrud.addStoreItem(
+              name: _storeitem_name.text,
+              category: _selectedCategory!,
+              itemtype: _selectedItemType!,
+              description: _storeitem_description.text,
+              price: double.parse(_storeitem_price.text),
+              quantities: {
+                "S": int.tryParse(_storeitem_quantity_s.text) ?? 0,
+                "M": int.tryParse(_storeitem_quantity_m.text) ?? 0,
+                "L": int.tryParse(_storeitem_quantity_l.text) ?? 0,
+                "XL": int.tryParse(_storeitem_quantity_xl.text) ?? 0,
+                "XXL": int.tryParse(_storeitem_quantity_xxl.text) ?? 0,
+              },
+              imageUrl: _storeitem_image_url.text,
+            );
+            _showResponseDialog(context, response.message ?? "Default message");
+          }
+        },
+        child: const Text("Save", style: TextStyle(color: Colors.white)),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  nameField,
-                  const SizedBox(height: 25.0),
-                  positionField,
-                  const SizedBox(height: 35.0),
-                  contactField,
-                  viewListbutton,
-                  const SizedBox(height: 45.0),
-                  SaveButon,
-                  const SizedBox(height: 15.0),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+    );
+  }
+
+  void _showResponseDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(content: Text(message)),
     );
   }
 }

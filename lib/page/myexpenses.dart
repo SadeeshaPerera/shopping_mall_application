@@ -50,7 +50,8 @@ class MyExpenses extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Expenses'),
-        backgroundColor: Colors.purple,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.picture_as_pdf),

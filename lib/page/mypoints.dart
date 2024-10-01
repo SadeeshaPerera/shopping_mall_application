@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shopping_mall_application/page/loyaltymemberdetails.dart';
 
 class MyPoints extends StatefulWidget {
   const MyPoints({super.key});
@@ -11,7 +12,11 @@ class MyPoints extends StatefulWidget {
 class _MyPointsState extends State<MyPoints> {
   final TextEditingController _mobileController = TextEditingController();
   List<Map<String, dynamic>> _transactions = [];
+  List<Map<String, dynamic>> _redeemHistory = []; // List for redeem history
   double _totalPoints = 0.0;
+  double _totalRedeemedPoints = 0.0; // Variable to store total redeemed points
+  bool _hasTransactions = false; // New flag to track transactions
+  bool _hasChecked = false; // New flag to track if the user has checked
 
   Future<void> _checkIfRegistered() async {
     String mobileNumber = _mobileController.text.trim();
@@ -23,6 +28,11 @@ class _MyPointsState extends State<MyPoints> {
       return;
     }
 
+    // Set hasChecked to true when user attempts to check
+    setState(() {
+      _hasChecked = true; // User has checked
+    });
+
     try {
       // Check if the mobile number is registered
       QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -33,11 +43,10 @@ class _MyPointsState extends State<MyPoints> {
       if (snapshot.docs.isNotEmpty) {
         // If registered, proceed to check points
         _checkPoints();
+        _fetchRedeemHistory(); // Fetch redeem history
       } else {
-        // If not registered
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('This mobile number is not registered.')),
-        );
+        // Show dialog if not registered
+        _showNotRegisteredDialog();
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -47,56 +56,129 @@ class _MyPointsState extends State<MyPoints> {
   }
 
   Future<void> _checkPoints() async {
-  String mobileNumber = _mobileController.text.trim();
+    String mobileNumber = _mobileController.text.trim();
 
-  // Reset previous transactions and total points
-  setState(() {
-    _transactions.clear();
-    _totalPoints = 0.0; // Reset the total points
-  });
+    // Reset previous transactions, total points, and the hasTransactions flag
+    setState(() {
+      _transactions.clear();
+      _totalPoints = 0.0;
+      _hasTransactions = false; // Reset the flag
+    });
 
-  try {
-    // Fetching all transactions from Firestore for the given mobile number
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('loyalty_points') // Ensure this matches your collection
-        .where('phone_number', isEqualTo: mobileNumber) // Check field name
-        .get();
+    try {
+      // Fetching all transactions from Firestore for the given mobile number
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('loyalty_points') // Ensure this matches your collection
+          .where('phone_number', isEqualTo: mobileNumber) // Check field name
+          .get();
 
-    if (snapshot.docs.isNotEmpty) {
-      for (var doc in snapshot.docs) {
-        String shopName = doc['shop_name'];
-        
-        // Ensure bill_amount is casted to double, even if it's stored as an int
-        double billAmount = (doc['bill_amount'] is int) 
-            ? (doc['bill_amount'] as int).toDouble() 
-            : doc['bill_amount'] as double;
-        
-        double points = billAmount * 0.05; // Calculate 5% of the bill amount
+      if (snapshot.docs.isNotEmpty) {
+        for (var doc in snapshot.docs) {
+          String shopName = doc['shop_name'];
 
-        // Add transaction to the list
-        _transactions.add({
-          'shop_name': shopName,
-          'points': points,
-        });
+          // Ensure bill_amount is casted to double, even if it's stored as an int
+          double billAmount = (doc['bill_amount'] is int)
+              ? (doc['bill_amount'] as int).toDouble()
+              : doc['bill_amount'] as double;
 
-        // Sum total points
-        _totalPoints += points;
+          double points = billAmount * 0.05; // Calculate 5% of the bill amount
+
+          // Add transaction to the list
+          _transactions.add({
+            'shop_name': shopName,
+            'points': points,
+          });
+
+          // Sum total points
+          _totalPoints += points;
+        }
+
+        _hasTransactions = true; // Set the flag to true if transactions are found
+
+        // Trigger a rebuild to show the updated transactions
+        setState(() {});
+      } else {
+        // No records found, keep the flag as false
+        setState(() {});
       }
-
-      // Trigger a rebuild to show the updated transactions
-      setState(() {});
-    } else {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No records found for this mobile number')),
+        SnackBar(content: Text('Error fetching data: $e')),
       );
     }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error fetching data: $e')),
+  }
+
+  Future<void> _fetchRedeemHistory() async {
+    String mobileNumber = _mobileController.text.trim();
+
+    // Reset previous redeem history
+    setState(() {
+      _redeemHistory.clear(); // Clear previous redeem history
+      _totalRedeemedPoints = 0.0; // Reset total redeemed points
+    });
+
+    try {
+      // Fetch redeem history from Firestore
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('redeemed_points') // Use the redeemed_points collection
+          .where('phone_number', isEqualTo: mobileNumber) // Ensure this matches the field name
+          .get();
+
+      for (var doc in snapshot.docs) {
+        String shopName = doc['shop_name'];
+        double pointsRedeemed = doc['points_redeemed']; // Change to points_redeemed
+
+        // Add redeem history to the list
+        _redeemHistory.add({
+          'shop_name': shopName,
+          'points': pointsRedeemed, // Store points_redeemed
+        });
+
+        // Sum total redeemed points
+        _totalRedeemedPoints += pointsRedeemed;
+      }
+
+      // Deduct total redeemed points from total points
+      _totalPoints -= _totalRedeemedPoints;
+
+      // Trigger a rebuild to show the updated redeem history and total points
+      setState(() {});
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching redeem history: $e')),
+      );
+    }
+  }
+
+  void _showNotRegisteredDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Not Registered'),
+          content: const Text('This mobile number is not registered.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Join Now'),
+              onPressed: () {
+                // Navigate directly to the LoyaltyMemberDetails page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoyaltyMemberForm()),
+                );
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
     );
   }
-}
-
 
   @override
   void dispose() {
@@ -109,7 +191,8 @@ class _MyPointsState extends State<MyPoints> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Points'),
-        backgroundColor: Colors.purple,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
       ),
       body: Center( // Center all the items in the body
         child: Padding(
@@ -201,31 +284,72 @@ class _MyPointsState extends State<MyPoints> {
               ),
               const SizedBox(height: 10),
 
-              // Display transaction history in Card format
+              // Display transaction history or message if no transactions found
               Expanded(
-                child: ListView.builder(
-                  itemCount: _transactions.length,
-                  itemBuilder: (context, index) {
-                    final transaction = _transactions[index];
-                    return Card(
-                      elevation: 4, // Shadow effect for the card
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: ListTile(
-                        title: Text(
-                          transaction['shop_name'],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Text(
-                          '+${transaction['points'].toStringAsFixed(0)} points',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                child: _hasChecked // Only show message after checking
+                    ? (_hasTransactions
+                        ? ListView.builder(
+                            itemCount: _transactions.length,
+                            itemBuilder: (context, index) {
+                              final transaction = _transactions[index];
+                              return Card(
+                                elevation: 4,
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: ListTile(
+                                  title: Text(transaction['shop_name']),
+                                  subtitle: Text(
+                                    'Points: ${transaction['points'].toStringAsFixed(0)}',
+                                     style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(child: Text('No transactions found.')))
+                    : const SizedBox(), // Empty space if not checked
+              ),
+
+              const SizedBox(height: 20),
+
+              // Section for Redeem History
+              const Text(
+                'Redeem History:',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              const SizedBox(height: 10),
+
+              // Display redeem history or message if no history found
+              Expanded(
+                child: _hasChecked // Only show message after checking
+                    ? (_redeemHistory.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: _redeemHistory.length,
+                            itemBuilder: (context, index) {
+                              final redeem = _redeemHistory[index];
+                              return Card(
+                                elevation: 4,
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: ListTile(
+                                  title: Text(redeem['shop_name']),
+                                  subtitle: Text(
+                                    'Points: ${redeem['points'].toStringAsFixed(0)}', // Show points redeemed only
+                                     style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(child: Text('No redeem history found.')))
+                    : const SizedBox(), // Empty space if not checked
               ),
             ],
           ),

@@ -27,7 +27,7 @@ class _ListPage extends State<ItemListPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Inventory Details"),
+        title: const Text("INVENTORY DETAILS",style: TextStyle(color: Colors.white,)),
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
@@ -61,9 +61,18 @@ class _ListPage extends State<ItemListPage> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             return Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: ListView(
-                children: snapshot.data!.docs.map((e) {
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5, // 5 items per row
+                  childAspectRatio:
+                      0.5, // Adjusts the height/width ratio of the cards
+                  mainAxisSpacing: 10, // Spacing between rows
+                  crossAxisSpacing: 10, // Spacing between columns
+                ),
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var e = snapshot.data!.docs[index];
                   DateTime createdAt = (e['createdAt'] as Timestamp).toDate();
                   DateTime updatedAt = (e['updatedAt'] as Timestamp).toDate();
                   Map<String, int> sizes = Map<String, int>.from(
@@ -71,123 +80,88 @@ class _ListPage extends State<ItemListPage> {
                           {'S': 0, 'M': 0, 'L': 0, 'XL': 0, 'XXL': 0});
 
                   return Card(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Text(e["itemname"]),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              e['imageUrl'] != null
-                                  ? Image.network(
-                                      e['imageUrl'],
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Container(
-                                      height: 100,
-                                      width: 100,
-                                      color: Colors.grey,
-                                      child: const Icon(Icons.image, size: 50),
-                                    ),
-                              const SizedBox(height: 10),
-                              Text("Category: " + e['category'],
-                                  style: const TextStyle(fontSize: 14)),
-                              Text("Item Type: " + e['itemtype'],
-                                  style: const TextStyle(fontSize: 14)),
-                              Text("Price: Rs. ${e['price']}",
-                                  style: const TextStyle(fontSize: 12)),
-                              const Text("Quantities by Size: ",
-                                  style: TextStyle(fontSize: 12)),
-                              Text(
-                                  "S: ${sizes['S']}, M: ${sizes['M']}, L: ${sizes['L']}, XL: ${sizes['XL']}, XXL: ${sizes['XXL']}",
-                                  style: const TextStyle(fontSize: 12)),
-                              Text("Description: " + e['description'],
-                                  style: const TextStyle(fontSize: 12)),
-                              Text("Created At: $createdAt",
-                                  style: const TextStyle(fontSize: 10)),
-                              Text("Updated At: $updatedAt",
-                                  style: const TextStyle(fontSize: 10)),
-                            ],
-                          ),
-                        ),
-                        OverflowBar(
-                          alignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.all(5.0),
-                                textStyle: const TextStyle(fontSize: 20),
-                              ),
-                              child: const Text('Edit'),
-                              onPressed: () {
-                                Navigator.pushAndRemoveUntil<dynamic>(
-                                  context,
-                                  MaterialPageRoute<dynamic>(
-                                    builder: (BuildContext context) => EditItem(
-                                      storeitem: StoreItem(
-                                        uid: e.id,
-                                        itemname: e["itemname"],
-                                        category: e["category"],
-                                        itemtype: e["itemtype"],
-                                        quantities: sizes,
-                                        price: e["price"],
-                                        description: e["description"],
-                                        imageUrl: e["imageUrl"],
-                                        name: null,
-                                      ),
-                                    ),
-                                  ),
-                                  (route) => false,
-                                );
-                              },
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.all(5.0),
-                                textStyle: const TextStyle(fontSize: 20),
-                              ),
-                              child: const Text('Delete'),
-                              onPressed: () async {
-                                var storeItemResponse =
-                                    await FirebaseCrud.deleteStoreItem(
-                                        docId: e.id);
-                                if (storeItemResponse.code != 200) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        content: Text(storeItemResponse.message
-                                            .toString()),
-                                      );
-                                    },
-                                  );
-                                } else if (storeItemResponse.code == 200) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      content: Text(
-                                          storeItemResponse.message.toString()),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+  child: SingleChildScrollView( // Wrap with SingleChildScrollView to handle overflow
+    child: Column(
+      children: [
+        ListTile(
+          title: Text(e["itemname"],style: TextStyle(color: const Color.fromARGB(255, 9, 3, 135),fontSize:18,fontWeight: FontWeight.bold,)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              e['imageUrl'] != null
+                  ? Image.network(
+                      e['imageUrl'],
+                      height: 300,
+                      width: 200,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.grey,
+                      child: const Icon(Icons.image, size: 50),
                     ),
-                  );
-                }).toList(),
+              const SizedBox(height: 10),
+              Text("Category: " + e['category'], style: const TextStyle(fontSize: 16)),
+              Text("Item Type: " + e['itemtype'], style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,)),
+              Text("Price: Rs. ${e['price']}", style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold,)),
+              const Text("Quantities by Size: ", style: TextStyle(fontSize: 14)),
+              Text(
+                  "S: ${sizes['S']}, M: ${sizes['M']}, L: ${sizes['L']}, XL: ${sizes['XL']}, XXL: ${sizes['XXL']}",
+                  style: const TextStyle(fontSize: 14)),
+              Text("Description: " + e['description'], style: const TextStyle(fontSize: 14)),
+              Text("Created At: $createdAt", style: const TextStyle(fontSize: 12)),
+              Text("Updated At: $updatedAt", style: const TextStyle(fontSize: 12)),
+            ],
+          ),
+        ),
+        OverflowBar(
+          alignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(5.0),
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              child: const Text('Edit',style: TextStyle(color: Color.fromARGB(255, 10, 157, 15),fontSize: 16,)),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (BuildContext context) => EditItem(
+                      storeitem: StoreItem(
+                        uid: e.id,
+                        itemname: e["itemname"],
+                        category: e["category"],
+                        itemtype: e["itemtype"],
+                        quantities: sizes,
+                        price: e["price"],
+                        description: e["description"],
+                        imageUrl: e["imageUrl"],
+                        name: null,
+                      ),
+                    ),
+                  ),
+                  (route) => false,
+                );
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(5.0),
+                textStyle: const TextStyle(fontSize: 16),
+              ),
+              child: const Text('Delete',style: TextStyle(color: Colors.red,)),
+              onPressed: () {_showDeleteConfirmationDialog(context, e.id);},
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+);
+
+                },
               ),
             );
           }
@@ -275,4 +249,40 @@ class _ListPage extends State<ItemListPage> {
       );
     }
   }
+
+  void _showDeleteConfirmationDialog(BuildContext context, String docId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Confirmation'),
+          content: Text('Are you sure you want to delete this item?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('No'),
+            ),
+            TextButton(
+              onPressed: () async {
+                var promotionresponse =
+                    await FirebaseCrud.deleteStoreItem(docId: docId);
+                Navigator.of(context).pop(); // Close the dialog
+
+                // Show success or error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(promotionresponse.message.toString()),
+                  ),
+                );
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

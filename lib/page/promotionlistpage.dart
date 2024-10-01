@@ -20,7 +20,6 @@ class _ListPage extends State<PromotionListPage> {
       FirebaseCrud.readPromotion();
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

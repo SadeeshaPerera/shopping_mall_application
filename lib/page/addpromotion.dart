@@ -2,6 +2,7 @@ import '/page/promotionlistpage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
 import '../services/promotion_firebase_crud.dart';
+import '/page/admin/admin_main_screen.dart';
 
 class AddPromotion extends StatefulWidget {
   const AddPromotion({super.key});
@@ -187,7 +188,13 @@ class _AddPage extends State<AddPromotion> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil<dynamic>(
+              context,
+              MaterialPageRoute<dynamic>(
+                builder: (BuildContext context) => const AdminScreen(), // Navigate to AdminScreen
+              ),
+              (route) => false, // Disable back feature
+            );
           },
         ),
       ),

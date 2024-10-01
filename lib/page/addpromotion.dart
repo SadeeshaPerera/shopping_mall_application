@@ -2,6 +2,7 @@ import '/page/promotionlistpage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
 import '../services/promotion_firebase_crud.dart';
+import '/page/admin/admin_main_screen.dart';
 
 class AddPromotion extends StatefulWidget {
   @override
@@ -27,7 +28,9 @@ class _AddPage extends State<AddPromotion> {
 
   @override
   Widget build(BuildContext context) {
-    final double fieldWidth = MediaQuery.of(context).size.width > 600 ? 400 : MediaQuery.of(context).size.width * 0.9;
+    final double fieldWidth = MediaQuery.of(context).size.width > 600
+        ? 400
+        : MediaQuery.of(context).size.width * 0.9;
 
     Widget shadowedField(Widget child) {
       return Container(
@@ -80,7 +83,8 @@ class _AddPage extends State<AddPromotion> {
           );
           if (pickedDate != null) {
             setState(() {
-              _promotion_date.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+              _promotion_date.text =
+                  DateFormat('yyyy-MM-dd').format(pickedDate);
             });
           }
         },
@@ -96,7 +100,8 @@ class _AddPage extends State<AddPromotion> {
           border: InputBorder.none, // No outline border
           suffixIcon: Icon(
             Icons.calendar_today,
-            color: const Color.fromARGB(255, 129, 136, 135), // Set calendar icon color to purple
+            color: const Color.fromARGB(
+                255, 129, 136, 135), // Set calendar icon color to purple
           ),
         ),
       ),
@@ -182,7 +187,14 @@ class _AddPage extends State<AddPromotion> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil<dynamic>(
+              context,
+              MaterialPageRoute<dynamic>(
+                builder: (BuildContext context) =>
+                    const AdminScreen(), // Navigate to AdminScreen
+              ),
+              (route) => false, // Disable back feature
+            );
           },
         ),
       ),
@@ -191,7 +203,8 @@ class _AddPage extends State<AddPromotion> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 20.0), // Adds space between the AppBar and the form
+              SizedBox(
+                  height: 20.0), // Adds space between the AppBar and the form
               Container(
                 padding: const EdgeInsets.all(20.0),
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),

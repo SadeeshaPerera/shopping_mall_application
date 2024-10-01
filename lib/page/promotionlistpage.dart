@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import '../services/promotion_firebase_crud.dart';
 
 class PromotionListPage extends StatefulWidget {
+  const PromotionListPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
@@ -14,7 +16,8 @@ class PromotionListPage extends StatefulWidget {
 }
 
 class _ListPage extends State<PromotionListPage> {
-  final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readPromotion();
+  final Stream<QuerySnapshot> collectionReference =
+      FirebaseCrud.readPromotion();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class _ListPage extends State<PromotionListPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.app_registration,
               color: Colors.white,
             ),
@@ -76,6 +79,36 @@ class _ListPage extends State<PromotionListPage> {
                       mainAxisSpacing: 16.0,
                       childAspectRatio: 1.2,
                     ),
+
+                    // OverflowBar(
+                    //   alignment: MainAxisAlignment.spaceBetween,
+                    //   children: <Widget>[
+                    //     TextButton(
+                    //       style: TextButton.styleFrom(
+                    //         padding: const EdgeInsets.all(5.0),
+                    //         // primary: const Color.fromARGB(255, 143, 133, 226),
+                    //         textStyle: const TextStyle(fontSize: 20),
+                    //       ),
+                    //       child: const Text('Edit'),
+                    //       onPressed: () {
+                    //         Navigator.pushAndRemoveUntil<dynamic>(
+                    //           context,
+                    //           MaterialPageRoute<dynamic>(
+                    //             builder: (BuildContext context) =>
+                    //                 PromotionEditPage(
+                    //               promotion: Promotion(
+                    //                   uid: e.id,
+                    //                   promotionname: e["promotion_name"],
+                    //                   position: e["position"],
+                    //                   contactno: e["contact_no"]),
+                    //             ),
+                    //           ),
+                    //           (route) =>
+                    //               false, //if you want to disable back feature set to false
+                    //         );
+                    //       },
+                    //       ),)
+
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var e = snapshot.data!.docs[index];
@@ -164,7 +197,8 @@ class _ListPage extends State<PromotionListPage> {
                                     ),
                                     child: const Text('Delete'),
                                     onPressed: () {
-                                      _showDeleteConfirmationDialog(context, e.id);
+                                      _showDeleteConfirmationDialog(
+                                          context, e.id);
                                     },
                                   ),
                                 ],
@@ -202,7 +236,8 @@ class _ListPage extends State<PromotionListPage> {
             ),
             TextButton(
               onPressed: () async {
-                var promotionresponse = await FirebaseCrud.deletePromotion(docId: docId);
+                var promotionresponse =
+                    await FirebaseCrud.deletePromotion(docId: docId);
                 Navigator.of(context).pop(); // Close the dialog
 
                 // Show success or error message

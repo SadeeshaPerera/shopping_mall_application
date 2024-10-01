@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
@@ -10,6 +9,8 @@ import '/page/editincident.dart';
 import '../services/incident_firebase_crud.dart';
 
 class IncidentListPage extends StatefulWidget {
+  const IncidentListPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _IncidentListPage();
@@ -27,6 +28,8 @@ class _IncidentListPage extends State<IncidentListPage> {
         title: const Text("Reported Incidents",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
+
+
       ),
       body: Column(
         children: [
@@ -74,6 +77,7 @@ class _IncidentListPage extends State<IncidentListPage> {
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
                   return Padding(
+
                     padding: const EdgeInsets.only(top: 8.0),
                     child: ListView(
                       children: snapshot.data!.docs.map((e) {
@@ -127,6 +131,7 @@ class _IncidentListPage extends State<IncidentListPage> {
                                         ),
                                       ),
                                     ),
+
                                   ),
                                   ButtonBar(
                                     alignment: MainAxisAlignment.end,
@@ -274,16 +279,16 @@ class _IncidentListPage extends State<IncidentListPage> {
             child: pw.Column(
               mainAxisAlignment: pw.MainAxisAlignment.center,
               children: [
-                pw.Text(name, style: pw.TextStyle(fontSize: 24)),
+                pw.Text(name, style: const pw.TextStyle(fontSize: 24)),
                 pw.SizedBox(height: 20),
                 pw.Text("Description: $description",
-                    style: pw.TextStyle(fontSize: 18)),
-                pw.Text("Date: $date", style: pw.TextStyle(fontSize: 18)),
+                    style: const pw.TextStyle(fontSize: 18)),
+                pw.Text("Date: $date", style: const pw.TextStyle(fontSize: 18)),
                 pw.Text("Location: $location",
-                    style: pw.TextStyle(fontSize: 18)),
+                    style: const pw.TextStyle(fontSize: 18)),
                 pw.Text("Contact Number: $contactNumber",
-                    style: pw.TextStyle(fontSize: 18)),
-                pw.Text("Status: $status", style: pw.TextStyle(fontSize: 18)),
+                    style: const pw.TextStyle(fontSize: 18)),
+                pw.Text("Status: $status", style: const pw.TextStyle(fontSize: 18)),
               ],
             ),
           );
@@ -340,4 +345,4 @@ class _IncidentListPage extends State<IncidentListPage> {
   }
 }
 
-void main() => runApp(MaterialApp(home: IncidentListPage()));
+void main() => runApp(const MaterialApp(home: IncidentListPage()));

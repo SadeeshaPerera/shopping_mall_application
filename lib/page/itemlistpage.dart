@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'dart:typed_data';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
+import '../services/inventory_firebase_crud.dart';
 import '../models/storeitem.dart';
 import '/page/additem.dart';
 import '/page/edititem.dart';
-import 'package:flutter/material.dart';
-import '../services/inventory_firebase_crud.dart';
 
 class ItemListPage extends StatefulWidget {
+  const ItemListPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
@@ -13,7 +18,6 @@ class ItemListPage extends StatefulWidget {
 }
 
 class _ListPage extends State<ItemListPage> {
-  // Reference to the Firestore collection
   final Stream<QuerySnapshot> collectionReference =
       FirebaseCrud.readStoreItem();
 
@@ -26,7 +30,7 @@ class _ListPage extends State<ItemListPage> {
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.add,
               color: Colors.white,
             ),
@@ -34,11 +38,18 @@ class _ListPage extends State<ItemListPage> {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => AddItem(),
+                  builder: (BuildContext context) => const AddItem(),
                 ),
-                (route) => false, // Disable back feature if necessary
+                (route) => false,
               );
             },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.picture_as_pdf,
+              color: Colors.white,
+            ),
+            onPressed: () {}, // Call the PDF generation function
           )
         ],
       ),
@@ -50,18 +61,11 @@ class _ListPage extends State<ItemListPage> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ListView(
                 children: snapshot.data!.docs.map((e) {
-                  // Retrieve createdAt and updatedAt
                   DateTime createdAt = (e['createdAt'] as Timestamp).toDate();
                   DateTime updatedAt = (e['updatedAt'] as Timestamp).toDate();
-
-                  // Ensure quantities are correctly parsed as Map<String, int>
-                  Map<String, int> sizes = Map<String, int>.from(e['quantities'] ?? {
-                    'S': 0,
-                    'M': 0,
-                    'L': 0,
-                    'XL': 0,
-                    'XXL': 0
-                  });
+                  Map<String, int> sizes = Map<String, int>.from(
+                      e['quantities'] ??
+                          {'S': 0, 'M': 0, 'L': 0, 'XL': 0, 'XXL': 0});
 
                   return Card(
                     child: Column(
@@ -71,7 +75,6 @@ class _ListPage extends State<ItemListPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              // Displaying item image
                               e['imageUrl'] != null
                                   ? Image.network(
                                       e['imageUrl'],
@@ -83,31 +86,30 @@ class _ListPage extends State<ItemListPage> {
                                       height: 100,
                                       width: 100,
                                       color: Colors.grey,
-                                      child: Icon(Icons.image, size: 50),
+                                      child: const Icon(Icons.image, size: 50),
                                     ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text("Category: " + e['category'],
                                   style: const TextStyle(fontSize: 14)),
                               Text("Item Type: " + e['itemtype'],
                                   style: const TextStyle(fontSize: 14)),
-                              Text("Price: Rs. " + e['price'].toString(),
+                              Text("Price: Rs. ${e['price']}",
                                   style: const TextStyle(fontSize: 12)),
-                              Text("Quantities by Size: ",
-                                  style: const TextStyle(fontSize: 12)),
+                              const Text("Quantities by Size: ",
+                                  style: TextStyle(fontSize: 12)),
                               Text(
                                   "S: ${sizes['S']}, M: ${sizes['M']}, L: ${sizes['L']}, XL: ${sizes['XL']}, XXL: ${sizes['XXL']}",
                                   style: const TextStyle(fontSize: 12)),
-                              // Displaying description
                               Text("Description: " + e['description'],
                                   style: const TextStyle(fontSize: 12)),
-                              Text("Created At: " + createdAt.toString(),
+                              Text("Created At: $createdAt",
                                   style: const TextStyle(fontSize: 10)),
-                              Text("Updated At: " + updatedAt.toString(),
+                              Text("Updated At: $updatedAt",
                                   style: const TextStyle(fontSize: 10)),
                             ],
                           ),
                         ),
-                        ButtonBar(
+                        OverflowBar(
                           alignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             TextButton(
@@ -126,7 +128,7 @@ class _ListPage extends State<ItemListPage> {
                                         itemname: e["itemname"],
                                         category: e["category"],
                                         itemtype: e["itemtype"],
-                                        quantities: sizes,  // <-- Pass sizes here
+                                        quantities: sizes,
                                         price: e["price"],
                                         description: e["description"],
                                         imageUrl: e["imageUrl"],
@@ -158,6 +160,22 @@ class _ListPage extends State<ItemListPage> {
                                       );
                                     },
                                   );
+                                } else if (storeItemResponse.code == 200) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      content: Text(
+                                          storeItemResponse.message.toString()),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 }
                               },
                             ),
@@ -170,7 +188,7 @@ class _ListPage extends State<ItemListPage> {
               ),
             );
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

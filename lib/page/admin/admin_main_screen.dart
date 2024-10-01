@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+
+import 'package:shopping_mall_application/page/itemlistpage.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shopping_mall_application/page/additem.dart';
+// import 'package:shopping_mall_application/page/additem.dart';
+
 import 'package:shopping_mall_application/page/addpromotion.dart';
+
+import 'package:shopping_mall_application/page/addloyaltypoints.dart';
+
 import 'package:shopping_mall_application/page/admin/admin_incident_list_page.dart';
-import 'package:shopping_mall_application/page/check_rental_applications.dart';
-import 'package:shopping_mall_application/page/maintenance_request_list_page.dart';
-import 'package:shopping_mall_application/auth_gate.dart';
+
+import 'package:shopping_mall_application/page/check_rental_applications.dart'; // Import the CheckRentalApplications page
+import 'package:shopping_mall_application/page/maintenance_request_list_page.dart'; // Import the MaintenanceRequestList page
+import 'package:shopping_mall_application/auth_gate.dart'; // Import your authentication gate
+
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -16,6 +25,7 @@ class AdminScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
       ),
+
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 600) {
@@ -51,6 +61,7 @@ class AdminScreen extends StatelessWidget {
     );
   }
 
+
   List<Widget> buildDashboardItems(BuildContext context) {
     return [
       buildDashboardItem(
@@ -61,6 +72,17 @@ class AdminScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddItem()),
+          );
+        },
+      ),
+      buildDashboardItem(
+        context,
+        icon: Icons.inventory,
+        label: 'Add Loyalty Points',
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddLoyaltyPoints()),
           );
         },
       ),
@@ -144,6 +166,7 @@ class AdminScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 16.0)),
               ],
+
             ),
           ),
         ),

@@ -5,8 +5,6 @@ import '../services/promotion_firebase_crud.dart';
 import '/page/admin/admin_main_screen.dart';
 
 class AddPromotion extends StatefulWidget {
-  const AddPromotion({super.key});
-
   @override
   State<StatefulWidget> createState() {
     return _AddPage();
@@ -127,17 +125,18 @@ class _AddPage extends State<AddPromotion> {
       ),
     );
 
-    final viewListbutton = TextButton(
-        onPressed: () {
-          Navigator.pushAndRemoveUntil<dynamic>(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => const PromotionListPage(),
-            ),
-            (route) => false, //To disable back feature set to false
-          );
-        },
-        child: const Text('View List of Promotions'));
+    final viewListButton = TextButton(
+      onPressed: () {
+        Navigator.pushAndRemoveUntil<dynamic>(
+          context,
+          MaterialPageRoute<dynamic>(
+            builder: (BuildContext context) => PromotionListPage(),
+          ),
+          (route) => false, // To disable back feature set to false
+        );
+      },
+      child: const Text('View List of Promotions'),
+    );
 
     final saveButton = Material(
       elevation: 5.0,
@@ -191,7 +190,8 @@ class _AddPage extends State<AddPromotion> {
             Navigator.pushAndRemoveUntil<dynamic>(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (BuildContext context) => const AdminScreen(), // Navigate to AdminScreen
+                builder: (BuildContext context) =>
+                    const AdminScreen(), // Navigate to AdminScreen
               ),
               (route) => false, // Disable back feature
             );
@@ -237,8 +237,8 @@ class _AddPage extends State<AddPromotion> {
                             const SizedBox(height: 35.0),
                             pictureField,
                             const SizedBox(height: 25.0),
-                            // viewListButton,
-                            // const SizedBox(height: 45.0),
+                            viewListButton,
+                            const SizedBox(height: 45.0),
                             saveButton,
                             const SizedBox(height: 15.0),
                           ],

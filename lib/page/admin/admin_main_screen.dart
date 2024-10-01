@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_mall_application/page/additem.dart';
 
 import 'package:shopping_mall_application/page/itemlistpage.dart';
 
@@ -15,7 +16,6 @@ import 'package:shopping_mall_application/page/check_rental_applications.dart'; 
 import 'package:shopping_mall_application/page/maintenance_request_list_page.dart'; // Import the MaintenanceRequestList page
 import 'package:shopping_mall_application/auth_gate.dart'; // Import your authentication gate
 
-
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
 
@@ -25,7 +25,6 @@ class AdminScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
       ),
-
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 600) {
@@ -60,7 +59,6 @@ class AdminScreen extends StatelessWidget {
       ),
     );
   }
-
 
   List<Widget> buildDashboardItems(BuildContext context) {
     return [
@@ -166,7 +164,6 @@ class AdminScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 16.0)),
               ],
-
             ),
           ),
         ),

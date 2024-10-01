@@ -3,19 +3,21 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shopping_mall_application/page/addincident.dart';
 
 class IncidentCard extends StatelessWidget {
+  const IncidentCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Card(
         elevation: 5,
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment:
                 CrossAxisAlignment.start, // Align title to the start
             children: [
-              Center(
+              const Center(
                 child: Text(
                   'Your Safty is Our Priority', // Title for the card
                   style: TextStyle(
@@ -24,7 +26,7 @@ class IncidentCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 10), // Add some space below the title
+              const SizedBox(height: 10), // Add some space below the title
               CarouselSlider(
                 options: CarouselOptions(
                   height: 200.0,
@@ -43,8 +45,8 @@ class IncidentCard extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   'If you see something, say something. Report any incidents you see to help keep our shopping mall safe.',
                   style: TextStyle(fontSize: 16),
@@ -55,7 +57,7 @@ class IncidentCard extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AddIncident()),
+                      MaterialPageRoute(builder: (context) => const AddIncident()),
                     );
                   },
                   child: const Text('Report an Incident'),

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+
+import 'package:shopping_mall_application/page/itemlistpage.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shopping_mall_application/page/additem.dart';
+// import 'package:shopping_mall_application/page/additem.dart';
+
 import 'package:shopping_mall_application/page/addpromotion.dart';
+import 'package:shopping_mall_application/page/addloyaltypoints.dart';
 
 import 'package:shopping_mall_application/page/admin/admin_incident_list_page.dart';
 
@@ -33,12 +38,10 @@ class AdminScreen extends StatelessWidget {
             // Button to add an inventory item
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          AddItem()), // Navigate to AddItem page
-                );
+
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ItemListPage()));
+
               },
               child: const Text('Add an Inventory Item'),
             ),
@@ -46,15 +49,25 @@ class AdminScreen extends StatelessWidget {
             // Button to create a promotion
             ElevatedButton(
               onPressed: () {
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
                           AddPromotion()), // Navigate to AddPromotion page
                 );
+
               },
               child: const Text('Create a Promotion'),
             ),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddLoyaltyPoints()));
+              },
+              child: const Text('Add Loyalty Points'),
+
 
             ElevatedButton(
               onPressed: () {
@@ -106,6 +119,8 @@ class AdminScreen extends StatelessWidget {
                 );
               },
               child: const Text('Sign Out'),
+
+
             ),
           ],
         ),

@@ -5,7 +5,7 @@ import '../services/inventory_firebase_crud.dart';
 
 class EditItem extends StatefulWidget {
   final StoreItem? storeitem;
-  EditItem({this.storeitem});
+  const EditItem({super.key, this.storeitem});
 
   @override
   State<StatefulWidget> createState() {
@@ -69,13 +69,13 @@ void initState() {
 
     final nameField = _buildTextFormField(_storeitem_name, "Item Name");
     final descriptionField = _buildTextFormField(_storeitem_description, "Description");
-    final priceField = _buildTextFormField(_storeitem_price, "Price", isNumber: true);
+    final priceField = _buildTextFormField(_storeitem_price, "Unit Price", isNumber: true);
 
     // Dropdown for Category
     final categoryField = DropdownButtonFormField<String>(
       value: _selectedCategory,
       decoration: InputDecoration(
-        hintText: "Select Category",
+        hintText: "Select Item Category",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
       onChanged: (newValue) => setState(() => _selectedCategory = newValue),
@@ -121,10 +121,10 @@ void initState() {
     final viewListButton = TextButton(
       onPressed: () => Navigator.pushAndRemoveUntil<dynamic>(
         context,
-        MaterialPageRoute<dynamic>(builder: (BuildContext context) => ItemListPage()),
+        MaterialPageRoute<dynamic>(builder: (BuildContext context) => const ItemListPage()),
         (route) => false,
       ),
-      child: const Text('View List of Store Items'),
+      child: const Text('View Inventory'),
     );
 
     final saveButton = Material(
@@ -148,7 +148,7 @@ void initState() {
                   "L": int.tryParse(_storeitem_quantity_l.text) ?? 0,
                   "XL": int.tryParse(_storeitem_quantity_xl.text) ?? 0,
                   "XXL": int.tryParse(_storeitem_quantity_xxl.text) ?? 0,
-              }.map((key, value) => MapEntry(key, value as int)),
+              }.map((key, value) => MapEntry(key, value)),
 
               imageUrl: _storeitem_image_url.text,
             );
@@ -160,7 +160,7 @@ void initState() {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Store Item')),
+      appBar: AppBar(title: const Text('Update Item')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -193,14 +193,33 @@ void initState() {
     );
   }
 
-  TextFormField _buildTextFormField(TextEditingController controller, String hint, {bool isNumber = false}) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-      decoration: InputDecoration(hintText: hint, border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-      validator: (value) => value == null || value.trim().isEmpty ? 'This field is required' : null,
-    );
-  }
+  TextFormField _buildTextFormField(
+    TextEditingController controller, String hint,
+    {bool isNumber = false}) {
+  return TextFormField(
+    controller: controller,
+    keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+    decoration: InputDecoration(
+        hintText: hint,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+    validator: (value) {
+      if (value == null || value.trim().isEmpty) {
+        return 'This field is required';
+      }
+      if (isNumber) {
+        final parsedValue = double.tryParse(value);
+        if (parsedValue == null) {
+          return 'Please enter a valid number';
+        }
+        if (parsedValue <= 0) {
+          return 'Price must be greater than 0';
+        }
+      }
+      return null;
+    },
+  );
+}
+
 
     void _showResponseDialog(BuildContext context, String message) {
     showDialog(
@@ -211,7 +230,8 @@ void initState() {
           TextButton(
             child: const Text('OK'),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (_) => const ItemListPage()));
             },
           ),
         ],

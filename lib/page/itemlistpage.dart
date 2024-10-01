@@ -7,6 +7,7 @@ import '../services/inventory_firebase_crud.dart';
 import '../models/storeitem.dart';
 import '/page/additem.dart';
 import '/page/edititem.dart';
+import 'package:printing/printing.dart'; // For displaying/printing PDFs in web
 
 class ItemListPage extends StatefulWidget {
   const ItemListPage({super.key});
@@ -45,12 +46,14 @@ class _ListPage extends State<ItemListPage> {
             },
           ),
           IconButton(
-            icon: const Icon(
-              Icons.picture_as_pdf,
-              color: Colors.white,
-            ),
-            onPressed: () {}, // Call the PDF generation function
-          )
+              icon: const Icon(
+                Icons.picture_as_pdf,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                generatePdfReport(
+                    context); // Call the PDF generation function inside a function
+              })
         ],
       ),
       body: StreamBuilder(
@@ -192,5 +195,84 @@ class _ListPage extends State<ItemListPage> {
         },
       ),
     );
+  }
+
+  Future<void> generatePdfReport(BuildContext context) async {
+    // Display a loading snackbar to inform the user
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Generating PDF report...')),
+    );
+
+    // Create a PDF document
+    final pdf = pw.Document();
+
+    try {
+      // Fetch data from Firestore and check if it's successfully fetched
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('StoreItem').get();
+
+      if (snapshot.docs.isEmpty) {
+        // Display a snackbar to inform there is no data
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No items found in inventory!')),
+        );
+        return; // Stop if there's no data
+      }
+
+      // Print for debugging to ensure data fetching works
+      print('Data fetched successfully: ${snapshot.docs.length} items found.');
+
+      // Create the PDF content
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text('Inventory Report',
+                    style: pw.TextStyle(
+                        fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 20),
+                pw.Table.fromTextArray(
+                  headers: [
+                    'Item Name',
+                    'Category',
+                    'Item Type',
+                    'Price (Rs.)'
+                  ],
+                  data: snapshot.docs.map((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+
+                    // Return the row data for the PDF table
+                    return [
+                      data['itemname'] ?? 'Unknown',
+                      data['category'] ?? 'Unknown',
+                      data['itemtype'] ?? 'Unknown',
+                      data['price']?.toString() ?? '0',
+                    ];
+                  }).toList(),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+
+      // Display a preview of the generated PDF or allow download/print
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save(),
+      );
+
+      // Inform the user that the PDF was generated successfully
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('PDF report generated successfully!')),
+      );
+    } catch (e) {
+      // Handle errors and inform the user if something goes wrong
+      print('Error generating PDF: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error generating PDF report')),
+      );
+    }
   }
 }

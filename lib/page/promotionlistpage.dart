@@ -48,7 +48,7 @@ class _ListPage extends State<PromotionListPage> {
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) => const AddPromotion(),
+                  builder: (BuildContext context) => AddPromotion(),
                 ),
                 (route) => false,
               );

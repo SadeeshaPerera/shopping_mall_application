@@ -215,11 +215,77 @@ class _AdminIncidentListPage extends State<AdminIncidentListPage> {
                   }
                 },
               ),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.green,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  textStyle: const TextStyle(fontSize: 16),
+                  side: const BorderSide(color: Colors.green), // Border color
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.download, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text('Report'),
+                  ],
+                ),
+                onPressed: () {
+                  _generateAndDownloadPDF(
+                    context,
+                    e["name"] ?? 'No Name',
+                    e["description"] ?? 'No Description',
+                    e["date"] ?? 'No Date',
+                    e["location"] ?? 'No Location',
+                    e["contactNumber"] ?? 'No Contact Number',
+                    e["status"] ?? 'No Status',
+                  );
+                },
+              ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _generateAndDownloadPDF(
+      BuildContext context,
+      String name,
+      String description,
+      String date,
+      String location,
+      String contactNumber,
+      String status) async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Text(name, style: pw.TextStyle(fontSize: 24)),
+                pw.SizedBox(height: 20),
+                pw.Text("Description: $description",
+                    style: pw.TextStyle(fontSize: 18)),
+                pw.Text("Date: $date", style: pw.TextStyle(fontSize: 18)),
+                pw.Text("Location: $location",
+                    style: pw.TextStyle(fontSize: 18)),
+                pw.Text("Contact Number: $contactNumber",
+                    style: pw.TextStyle(fontSize: 18)),
+                pw.Text("Status: $status", style: pw.TextStyle(fontSize: 18)),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    final pdfBytes = await pdf.save();
+    await Printing.sharePdf(bytes: pdfBytes, filename: '$name.pdf');
   }
 
   Future<void> _generateAndDownloadAllIncidentsPDF() async {

@@ -38,10 +38,10 @@ class AdminScreen extends StatelessWidget {
             // Button to add an inventory item
             ElevatedButton(
               onPressed: () {
-
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ItemListPage()));
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ItemListPage()));
               },
               child: const Text('Add an Inventory Item'),
             ),
@@ -49,26 +49,25 @@ class AdminScreen extends StatelessWidget {
             // Button to create a promotion
             ElevatedButton(
               onPressed: () {
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
                           AddPromotion()), // Navigate to AddPromotion page
                 );
-
               },
               child: const Text('Create a Promotion'),
             ),
 
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddLoyaltyPoints()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddLoyaltyPoints()));
               },
               child: const Text('Add Loyalty Points'),
-
-
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -119,8 +118,6 @@ class AdminScreen extends StatelessWidget {
                 );
               },
               child: const Text('Sign Out'),
-
-
             ),
           ],
         ),

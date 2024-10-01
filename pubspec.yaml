@@ -43,8 +43,10 @@ dependencies:
   cloud_firestore: ^5.4.0
   carousel_slider: ^5.0.0
 
+
   pdf: ^3.6.5
   printing: ^5.9.2
+
 
 
 

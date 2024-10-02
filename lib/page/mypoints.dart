@@ -109,46 +109,51 @@ class _MyPointsState extends State<MyPoints> {
   }
 
   Future<void> _fetchRedeemHistory() async {
-    String mobileNumber = _mobileController.text.trim();
+  String mobileNumber = _mobileController.text.trim();
 
-    // Reset previous redeem history
-    setState(() {
-      _redeemHistory.clear(); // Clear previous redeem history
-      _totalRedeemedPoints = 0.0; // Reset total redeemed points
-    });
+  // Reset previous redeem history
+  setState(() {
+    _redeemHistory.clear(); // Clear previous redeem history
+    _totalRedeemedPoints = 0.0; // Reset total redeemed points
+  });
 
-    try {
-      // Fetch redeem history from Firestore
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('redeemed_points') // Use the redeemed_points collection
-          .where('phone_number', isEqualTo: mobileNumber) // Ensure this matches the field name
-          .get();
+  try {
+    // Fetch redeem history from Firestore
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('redeemed_points') // Use the redeemed_points collection
+        .where('phone_number', isEqualTo: mobileNumber) // Ensure this matches the field name
+        .get();
 
-      for (var doc in snapshot.docs) {
-        String shopName = doc['shop_name'];
-        double pointsRedeemed = doc['points_redeemed']; // Change to points_redeemed
+    for (var doc in snapshot.docs) {
+      String shopName = doc['shop_name'];
 
-        // Add redeem history to the list
-        _redeemHistory.add({
-          'shop_name': shopName,
-          'points': pointsRedeemed, // Store points_redeemed
-        });
+      // Ensure points_redeemed is casted to double, even if it's stored as an int
+      double pointsRedeemed = (doc['points_redeemed'] is int)
+          ? (doc['points_redeemed'] as int).toDouble()
+          : doc['points_redeemed'] as double;
 
-        // Sum total redeemed points
-        _totalRedeemedPoints += pointsRedeemed;
-      }
+      // Add redeem history to the list
+      _redeemHistory.add({
+        'shop_name': shopName,
+        'points': pointsRedeemed, // Store points_redeemed
+      });
 
-      // Deduct total redeemed points from total points
-      _totalPoints -= _totalRedeemedPoints;
-
-      // Trigger a rebuild to show the updated redeem history and total points
-      setState(() {});
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error fetching redeem history: $e')),
-      );
+      // Sum total redeemed points
+      _totalRedeemedPoints += pointsRedeemed;
     }
+
+    // Deduct total redeemed points from total points
+    _totalPoints -= _totalRedeemedPoints;
+
+    // Trigger a rebuild to show the updated redeem history and total points
+    setState(() {});
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error fetching redeem history: $e')),
+    );
   }
+}
+
 
   void _showNotRegisteredDialog() {
     showDialog(

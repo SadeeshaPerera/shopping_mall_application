@@ -26,6 +26,7 @@ class AdminScreen extends StatelessWidget {
         title: const Text('Admin Dashboard'),
       ),
 
+
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 600) {
@@ -39,6 +40,7 @@ class AdminScreen extends StatelessWidget {
       ),
     );
   }
+
 
   Widget buildWebLayout(BuildContext context) {
     return Padding(
@@ -60,6 +62,7 @@ class AdminScreen extends StatelessWidget {
       ),
     );
   }
+
 
   List<Widget> buildDashboardItems(BuildContext context) {
     return [
@@ -165,6 +168,7 @@ class AdminScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 16.0)),
               ],
+
 
             ),
           ),

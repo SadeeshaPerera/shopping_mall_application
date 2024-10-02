@@ -5,6 +5,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _Collection = _firestore.collection('StoreItem');
 
 class FirebaseCrud {
+
   // Add store item
   static Future<StoreItemResponse> addStoreItem({
     required String name,
@@ -93,6 +94,7 @@ class FirebaseCrud {
       storeItemResponse.code = 500;
       storeItemResponse.message = e;
     });
+
 
     return storeItemResponse;
   }

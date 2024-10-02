@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import '../services/promotion_firebase_crud.dart';
 
 class PromotionListPage extends StatefulWidget {
-  const PromotionListPage({super.key});
-
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
@@ -40,7 +38,7 @@ class _ListPage extends State<PromotionListPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.app_registration,
               color: Colors.white,
             ),
@@ -79,36 +77,6 @@ class _ListPage extends State<PromotionListPage> {
                       mainAxisSpacing: 16.0,
                       childAspectRatio: 1.2,
                     ),
-
-                    // OverflowBar(
-                    //   alignment: MainAxisAlignment.spaceBetween,
-                    //   children: <Widget>[
-                    //     TextButton(
-                    //       style: TextButton.styleFrom(
-                    //         padding: const EdgeInsets.all(5.0),
-                    //         // primary: const Color.fromARGB(255, 143, 133, 226),
-                    //         textStyle: const TextStyle(fontSize: 20),
-                    //       ),
-                    //       child: const Text('Edit'),
-                    //       onPressed: () {
-                    //         Navigator.pushAndRemoveUntil<dynamic>(
-                    //           context,
-                    //           MaterialPageRoute<dynamic>(
-                    //             builder: (BuildContext context) =>
-                    //                 PromotionEditPage(
-                    //               promotion: Promotion(
-                    //                   uid: e.id,
-                    //                   promotionname: e["promotion_name"],
-                    //                   position: e["position"],
-                    //                   contactno: e["contact_no"]),
-                    //             ),
-                    //           ),
-                    //           (route) =>
-                    //               false, //if you want to disable back feature set to false
-                    //         );
-                    //       },
-                    //       ),)
-
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var e = snapshot.data!.docs[index];

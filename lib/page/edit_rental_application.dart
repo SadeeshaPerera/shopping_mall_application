@@ -129,8 +129,7 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) => RentalApplicationListPage()),
+            MaterialPageRoute(builder: (context) => RentalApplicationListPage()),
           );
         },
         child: Text(
@@ -150,8 +149,7 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-          var response = await RentalApplicationCrud.deleteRentalApplication(
-              widget.rentalApplication.id!);
+          var response = await RentalApplicationCrud.deleteRentalApplication(widget.rentalApplication.id!);
           showDialog(
             context: context,
             builder: (context) {
@@ -162,8 +160,7 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => RentalApplicationListPage()),
+                        MaterialPageRoute(builder: (context) => RentalApplicationListPage()),
                       );
                     },
                     child: Text('OK'),
@@ -183,8 +180,7 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Rental Application',
-            style: TextStyle(color: Colors.white)),
+        title: const Text('Edit Rental Application', style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SingleChildScrollView(
@@ -204,7 +200,7 @@ class _EditRentalApplicationState extends State<EditRentalApplication> {
                 const SizedBox(height: 15.0),
                 updateButton,
                 const SizedBox(height: 10.0),
-                deleteButton, // Add delete button here
+                deleteButton,  // Add delete button here
                 const SizedBox(height: 10.0),
                 viewApplicationsButton,
               ],

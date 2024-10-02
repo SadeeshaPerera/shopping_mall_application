@@ -5,7 +5,7 @@ import '../services/promotion_firebase_crud.dart';
 
 class PromotionEditPage extends StatefulWidget {
   final Promotion? promotion;
-  const PromotionEditPage({super.key, this.promotion});
+  PromotionEditPage({this.promotion});
 
   @override
   State<StatefulWidget> createState() {
@@ -144,7 +144,8 @@ class _EditPage extends State<PromotionEditPage> {
       ),
     );
 
-    final pictureUrlField = shadowedField(TextFormField(
+    final pictureUrlField = shadowedField(
+      TextFormField(
         controller: _pictureUrlController,
         autofocus: false,
         validator: (value) {
@@ -154,22 +155,12 @@ class _EditPage extends State<PromotionEditPage> {
           return null;
         },
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Contact Number",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.0)))));
-
-    final viewListbutton = TextButton(
-        onPressed: () {
-          Navigator.pushAndRemoveUntil<dynamic>(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => const PromotionListPage(),
-            ),
-            (route) => false, //if you want to disable back feature set to false
-          );
-        },
-        child: const Text('View List of Promotion'));
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Picture URL",
+          border: InputBorder.none,
+        ),
+      ),
+    );
 
     final saveButton = Material(
       elevation: 5.0,

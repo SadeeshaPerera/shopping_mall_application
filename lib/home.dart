@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,77 +19,121 @@ import 'package:shopping_mall_application/page/home/occupency_dashboard_section.
 import 'package:shopping_mall_application/auth_gate.dart';
 
 import 'package:shopping_mall_application/page/promotionlistcustomer.dart';
-import 'package:shopping_mall_application/page/mypoints.dart'; 
+import 'package:shopping_mall_application/page/mypoints.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ShoppingMate Home'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<ProfileScreen>(
-                  builder: (context) => ProfileScreen(
-                    appBar: AppBar(
-                      title: const Text('User Profile'),
+        appBar: AppBar(
+          title: const Text('ShoppingMate Home'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(
+                      appBar: AppBar(
+                        title: const Text('User Profile'),
+                      ),
+                      actions: [
+                        SignedOutAction((context) {
+                          Navigator.of(context).pop();
+                        })
+                      ],
+                      children: const [],
                     ),
-                    actions: [
-                      SignedOutAction((context) {
-                        Navigator.of(context).pop();
-                      })
-                    ],
-                    children: const [],
                   ),
-                ),
-              );
-            },
-          ),
-        ],
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              Image.asset('assets/images/ShoppingMateLogo.png'),
-              Text(
-                'Welcome!',
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-              const SignOutButton(),
-              const SizedBox(height: 30), // Keep the spacing
- // Add the LoyaltySection widget here
-
-              IncidentCard(), // Use the custom IncidentCard widget here
-              LoyaltySection(), // Add the LoyaltySection widget here
-              const SizedBox(height: 20), // Add spacing between sections
-
-              SeePromotionCard(), // Add the Promotion card widget here
-              const SizedBox(height: 20), // Add spacing for the wallet section
-              SeeMyWalletCard(), // Add the My Wallet card widget here
-
-              
-
-              RentalApplicationCard(), // Custom widget
-
-              // Dashboard Section
-              DashboardCard(), // Add the Promotion card widget here
-
-
-            ],
-          ),
+                );
+              },
+            ),
+          ],
+          automaticallyImplyLeading: false,
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                Image.asset('assets/images/ShoppingMateLogo.png'),
+                Text(
+                  'Welcome!',
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
+                const SignOutButton(),
+                const SizedBox(height: 30), // Keep the spacing
+                // Add the LoyaltySection widget here
+
+                IncidentCard(), // Use the custom IncidentCard widget here
+                LoyaltySection(), // Add the LoyaltySection widget here
+                const SizedBox(height: 20), // Add spacing between sections
+
+                SeePromotionCard(), // Add the Promotion card widget here
+                const SizedBox(
+                    height: 20), // Add spacing for the wallet section
+                SeeMyWalletCard(), // Add the My Wallet card widget here
+
+                // Incident Section
+                IncidentCard(), // Custom widget
+
+                // Dashboard Section
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('rentalApplications')
+                        .where('userId',
+                            isEqualTo:
+                                userId) // Adjust this line if you want to filter by user ID
+                        .where('status',
+                            isEqualTo:
+                                'Approved') // Adjust this line if you want to filter by status
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text("Error: ${snapshot.error}"));
+                      } else if (!snapshot.hasData ||
+                          snapshot.data!.docs.isEmpty) {
+                        return const SizedBox(); // Return an empty widget if there's no data
+                      }
+                      return DashboardCard();
+                    }), // Custom widget
+
+                // Sign-Out Button
+                ElevatedButton(
+                  onPressed: () async {
+                    await FirebaseAuth.instance
+                        .signOut(); // Sign out using FirebaseAuth
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const AuthGate()), // Navigate to AuthGate
+                    );
+                  },
+                  child: const Text('Sign Out'),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
+
+// Dashboard Section
+//               DashboardCard(), // Add the Promotion card widget here
+
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class SeePromotionCard extends StatelessWidget {
   const SeePromotionCard({super.key});
@@ -136,7 +181,8 @@ class SeeMyWalletCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Distribute space evenly
+          mainAxisAlignment:
+              MainAxisAlignment.spaceEvenly, // Distribute space evenly
           children: [
             // My Points Section
             Expanded(
@@ -145,20 +191,24 @@ class SeeMyWalletCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const MyPoints(), // Navigate to MyPoints page
+                      builder: (context) =>
+                          const MyPoints(), // Navigate to MyPoints page
                     ),
                   );
                 },
                 child: Column(
                   children: [
-                    const Icon(Icons.account_balance_wallet, color: Colors.purple, size: 40),
+                    const Icon(Icons.account_balance_wallet,
+                        color: Colors.purple, size: 40),
                     const SizedBox(height: 10),
                     const Text(
                       'My Points',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 5),
-                    const Text('View your points and rewards', textAlign: TextAlign.center),
+                    const Text('View your points and rewards',
+                        textAlign: TextAlign.center),
                   ],
                 ),
               ),
@@ -178,7 +228,8 @@ class SeeMyWalletCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>const MyExpenses(), // Navigate to MyExpenses page
+                      builder: (context) =>
+                          const MyExpenses(), // Navigate to MyExpenses page
                     ),
                   );
                 },
@@ -188,10 +239,12 @@ class SeeMyWalletCard extends StatelessWidget {
                     const SizedBox(height: 10),
                     const Text(
                       'My Expenses',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 5),
-                    const Text('View your spending history', textAlign: TextAlign.center),
+                    const Text('View your spending history',
+                        textAlign: TextAlign.center),
                   ],
                 ),
               ),

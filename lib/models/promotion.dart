@@ -5,5 +5,4 @@ class Promotion {
   String? pictureUrl;
 
   Promotion({this.uid, this.shopName, this.date, this.pictureUrl});
-
 }

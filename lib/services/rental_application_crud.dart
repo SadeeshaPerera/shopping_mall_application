@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/rental_application.dart';
 
 class RentalApplicationCrud {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
   static const String collectionName = "rentalApplications";
 
   // Add a new rental application
@@ -12,10 +14,12 @@ class RentalApplicationCrud {
     required String driveLink,
   }) async {
     try {
-      DocumentReference docRef =
-          await _firestore.collection(collectionName).add({
+      final userId = _auth.currentUser!.uid;
+      DocumentReference docRef = await _firestore.collection(collectionName).add({
+        'userId': userId,
         'userName': userName,
         'shopType': shopType,
+        'status': 'Pending',
         'driveLink': driveLink,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -41,7 +45,9 @@ class RentalApplicationCrud {
     required String driveLink,
   }) async {
     try {
+      final userId = _auth.currentUser!.uid;
       await _firestore.collection(collectionName).doc(id).update({
+        'userId': userId,
         'userName': userName,
         'shopType': shopType,
         'driveLink': driveLink,
@@ -90,6 +96,7 @@ class RentalApplicationCrud {
           userName: doc['userName'],
           shopType: doc['shopType'],
           driveLink: doc['driveLink'],
+          status: doc['status'],
         );
       }).toList();
 

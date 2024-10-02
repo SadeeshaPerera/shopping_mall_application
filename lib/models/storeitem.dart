@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StoreItem {
   String? uid;
+
   String? itemname;
   String? category; // Dropdown: Women, Men, Kids
   String? itemtype; // Dropdown: dress, pant, trouser, t-shirt, shirt, blouse, skirt, denim
@@ -24,4 +25,5 @@ class StoreItem {
     this.createdAt,
     this.updatedAt, required name,
   });
+
 }

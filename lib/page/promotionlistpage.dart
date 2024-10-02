@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import '../services/promotion_firebase_crud.dart';
 
 class PromotionListPage extends StatefulWidget {
-  const PromotionListPage({super.key});
-
   @override
   State<StatefulWidget> createState() {
     return _ListPage();
@@ -19,17 +17,28 @@ class _ListPage extends State<PromotionListPage> {
   final Stream<QuerySnapshot> collectionReference =
       FirebaseCrud.readPromotion();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("List of Promotion"),
+        title: const Text("List of Promotions"),
         backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil<dynamic>(
+              context,
+              MaterialPageRoute<dynamic>(
+                builder: (BuildContext context) => AddPromotion(),
+              ),
+              (route) => false,
+            );
+          },
+        ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.app_registration,
               color: Colors.white,
             ),
@@ -39,8 +48,7 @@ class _ListPage extends State<PromotionListPage> {
                 MaterialPageRoute<dynamic>(
                   builder: (BuildContext context) => AddPromotion(),
                 ),
-                (route) =>
-                    false, //if you want to disable back feature set to false
+                (route) => false,
               );
             },
           )
@@ -51,7 +59,6 @@ class _ListPage extends State<PromotionListPage> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             return Padding(
-
               padding: const EdgeInsets.all(16.0),
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -70,36 +77,6 @@ class _ListPage extends State<PromotionListPage> {
                       mainAxisSpacing: 16.0,
                       childAspectRatio: 1.2,
                     ),
-
-                    // OverflowBar(
-                    //   alignment: MainAxisAlignment.spaceBetween,
-                    //   children: <Widget>[
-                    //     TextButton(
-                    //       style: TextButton.styleFrom(
-                    //         padding: const EdgeInsets.all(5.0),
-                    //         // primary: const Color.fromARGB(255, 143, 133, 226),
-                    //         textStyle: const TextStyle(fontSize: 20),
-                    //       ),
-                    //       child: const Text('Edit'),
-                    //       onPressed: () {
-                    //         Navigator.pushAndRemoveUntil<dynamic>(
-                    //           context,
-                    //           MaterialPageRoute<dynamic>(
-                    //             builder: (BuildContext context) =>
-                    //                 PromotionEditPage(
-                    //               promotion: Promotion(
-                    //                   uid: e.id,
-                    //                   promotionname: e["promotion_name"],
-                    //                   position: e["position"],
-                    //                   contactno: e["contact_no"]),
-                    //             ),
-                    //           ),
-                    //           (route) =>
-                    //               false, //if you want to disable back feature set to false
-                    //         );
-                    //       },
-                    //       ),)
-
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var e = snapshot.data!.docs[index];
@@ -195,75 +172,21 @@ class _ListPage extends State<PromotionListPage> {
                                 ],
                               ),
                             ),
-
                           ],
-                        )),
-                      ),
-                    ),
-                    ButtonBar(
-                      alignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(5.0),
-                            // primary: const Color.fromARGB(255, 143, 133, 226),
-                            textStyle: const TextStyle(fontSize: 20),
-                          ),
-                          child: const Text('Edit'),
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil<dynamic>(
-                              context,
-                              MaterialPageRoute<dynamic>(
-                                builder: (BuildContext context) =>
-                                    PromotionEditPage(
-                                  promotion: Promotion(
-                                      uid: e.id,
-                                      promotionname: e["promotion_name"],
-                                      position: e["position"],
-                                      contactno: e["contact_no"]),
-                                ),
-                              ),
-                              (route) =>
-                                  false, //if you want to disable back feature set to false
-                            );
-                          },
                         ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(5.0),
-                            // primary: const Color.fromARGB(255, 143, 133, 226),
-                            textStyle: const TextStyle(fontSize: 20),
-                          ),
-                          child: const Text('Delete'),
-                          onPressed: () async {
-                            var promotionresponse =
-                                await FirebaseCrud.deletePromotion(docId: e.id);
-                            if (promotionresponse.code != 200) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: Text(
-                                          promotionresponse.message.toString()),
-                                    );
-                                  });
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ]));
-                }).toList(),
+                      );
+                    },
+                  );
+                },
               ),
             );
           }
 
-          return Container();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
   }
-
 
   void _showDeleteConfirmationDialog(BuildContext context, String docId) {
     showDialog(
@@ -299,5 +222,4 @@ class _ListPage extends State<PromotionListPage> {
       },
     );
   }
-
 }

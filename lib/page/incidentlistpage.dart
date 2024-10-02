@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-
-
 import '/models/incident.dart';
 import '/page/addincident.dart';
 import '/page/editincident.dart';
 import 'package:flutter/material.dart';
-
 import '../services/incident_firebase_crud.dart';
 
 class IncidentListPage extends StatefulWidget {
@@ -23,7 +19,7 @@ class IncidentListPage extends StatefulWidget {
 
 class _IncidentListPage extends State<IncidentListPage> {
   final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readIncident();
-  //FirebaseFirestore.instance.collection('Incident').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,10 +28,6 @@ class _IncidentListPage extends State<IncidentListPage> {
         title: const Text("Reported Incidents",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
-
-
-
-
       ),
       body: Column(
         children: [
@@ -55,7 +47,7 @@ class _IncidentListPage extends State<IncidentListPage> {
                     Text('Download All', style: TextStyle(color: Colors.blue)),
                   ],
                 ),
-                SizedBox(width: 16), // Add some space between the buttons
+                SizedBox(width: 16),
                 Column(
                   children: [
                     IconButton(
@@ -66,7 +58,7 @@ class _IncidentListPage extends State<IncidentListPage> {
                           MaterialPageRoute<dynamic>(
                             builder: (BuildContext context) => AddIncident(),
                           ),
-                          (route) => false, // Disable back feature
+                          (route) => false,
                         );
                       },
                     ),
@@ -83,7 +75,6 @@ class _IncidentListPage extends State<IncidentListPage> {
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
                   return Padding(
-
                     padding: const EdgeInsets.only(top: 8.0),
                     child: ListView(
                       children: snapshot.data!.docs.map((e) {
@@ -137,7 +128,6 @@ class _IncidentListPage extends State<IncidentListPage> {
                                         ),
                                       ),
                                     ),
-
                                   ),
                                   ButtonBar(
                                     alignment: MainAxisAlignment.end,
@@ -177,11 +167,9 @@ class _IncidentListPage extends State<IncidentListPage> {
                                                 ),
                                               ),
                                             ),
-                                            (route) =>
-                                                false, // Disable back feature
+                                            (route) => false,
                                           );
                                         },
-
                                       ),
                                       OutlinedButton(
                                         style: OutlinedButton.styleFrom(
@@ -191,27 +179,12 @@ class _IncidentListPage extends State<IncidentListPage> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 16, vertical: 8),
                                           textStyle: TextStyle(fontSize: 16),
-                                          side: BorderSide(
-                                              color:
-                                                  Colors.red), // Border color
+                                          side: BorderSide(color: Colors.red),
                                         ),
                                         child: const Text('Remove'),
-                                        onPressed: () async {
-                                          var incidentResponse =
-                                              await FirebaseCrud.deleteIncident(
-                                                  docId: e.id);
-                                          if (incidentResponse.code != 200) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: Text(incidentResponse
-                                                      .message
-                                                      .toString()),
-                                                );
-                                              },
-                                            );
-                                          }
+                                        onPressed: () {
+                                          _showDeleteConfirmationDialog(
+                                              context, e.id);
                                         },
                                       ),
                                       OutlinedButton(
@@ -223,8 +196,7 @@ class _IncidentListPage extends State<IncidentListPage> {
                                           textStyle:
                                               const TextStyle(fontSize: 16),
                                           side: const BorderSide(
-                                              color:
-                                                  Colors.green), // Border color
+                                              color: Colors.green),
                                         ),
                                         child: const Row(
                                           children: [
@@ -256,7 +228,6 @@ class _IncidentListPage extends State<IncidentListPage> {
                           ),
                         );
                       }).toList(),
-
                     ),
                   );
                 }
@@ -270,6 +241,43 @@ class _IncidentListPage extends State<IncidentListPage> {
     );
   }
 
+  void _showDeleteConfirmationDialog(BuildContext context, String docId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Deletion"),
+          content: Text("Are you sure you want to delete this incident?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                var incidentResponse =
+                    await FirebaseCrud.deleteIncident(docId: docId);
+                if (incidentResponse.code != 200) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text(incidentResponse.message.toString()),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _generateAndDownloadPDF(
       BuildContext context,
@@ -297,7 +305,8 @@ class _IncidentListPage extends State<IncidentListPage> {
                     style: const pw.TextStyle(fontSize: 18)),
                 pw.Text("Contact Number: $contactNumber",
                     style: const pw.TextStyle(fontSize: 18)),
-                pw.Text("Status: $status", style: const pw.TextStyle(fontSize: 18)),
+                pw.Text("Status: $status",
+                    style: const pw.TextStyle(fontSize: 18)),
               ],
             ),
           );
@@ -355,4 +364,3 @@ class _IncidentListPage extends State<IncidentListPage> {
 }
 
 void main() => runApp(const MaterialApp(home: IncidentListPage()));
-

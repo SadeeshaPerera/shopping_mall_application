@@ -1,7 +1,7 @@
 # ShoppingMate -- Shopping Mall Application 
 
 
-This is a mobile application designed to streamline the process of maaging shopping mall operations.
+This is a mobile application designed to streamline the process of managing shopping mall operations.
 
 ## Main Features
 1.  Health and Safety Monitoring

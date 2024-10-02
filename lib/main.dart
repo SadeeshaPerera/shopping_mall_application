@@ -5,7 +5,6 @@ import 'firebase_options.dart';
 import 'auth_gate.dart'; // Make sure to import your authentication gate or main screen
 import 'home.dart'; // Import your app's main home widget
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rental Application',
+      title: 'ShoppingMate',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,

@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import '../services/inventory_firebase_crud.dart';
 import '../models/storeitem.dart';
-
 import '/page/additem.dart';
 import '/page/edititem.dart';
 import 'package:printing/printing.dart'; // For displaying/printing PDFs in web
@@ -23,20 +21,18 @@ class ItemListPage extends StatefulWidget {
 class _ListPage extends State<ItemListPage> {
   final Stream<QuerySnapshot> collectionReference =
       FirebaseCrud.readStoreItem();
-  //FirebaseFirestore.instance.collection('StoreItem').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("List of StoreItem"),
+        title: const Text("Inventory Details"),
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           IconButton(
-
             icon: const Icon(
               Icons.add,
-
               color: Colors.white,
             ),
             onPressed: () {
@@ -45,9 +41,7 @@ class _ListPage extends State<ItemListPage> {
                 MaterialPageRoute<dynamic>(
                   builder: (BuildContext context) => const AddItem(),
                 ),
-
                 (route) => false,
-
               );
             },
           ),
@@ -77,7 +71,6 @@ class _ListPage extends State<ItemListPage> {
                           {'S': 0, 'M': 0, 'L': 0, 'XL': 0, 'XXL': 0});
 
                   return Card(
-
                     child: Column(
                       children: [
                         ListTile(
@@ -189,70 +182,16 @@ class _ListPage extends State<ItemListPage> {
                                 }
                               },
                             ),
-
                           ],
-                        )),
-                      ),
-                    ),
-                    ButtonBar(
-                      alignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(5.0),
-                            // primary: const Color.fromARGB(255, 143, 133, 226),
-                            textStyle: const TextStyle(fontSize: 20),
-                          ),
-                          child: const Text('Edit'),
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil<dynamic>(
-                              context,
-                              MaterialPageRoute<dynamic>(
-                                builder: (BuildContext context) => EditItem(
-                                  storeitem: StoreItem(
-                                      uid: e.id,
-                                      storeitemname: e["storeitem_name"],
-                                      position: e["position"],
-                                      contactno: e["contact_no"]),
-                                ),
-                              ),
-                              (route) =>
-                                  false, //if you want to disable back feature set to false
-                            );
-                          },
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(5.0),
-                            // primary: const Color.fromARGB(255, 143, 133, 226),
-                            textStyle: const TextStyle(fontSize: 20),
-                          ),
-                          child: const Text('Delete'),
-                          onPressed: () async {
-                            var storeitemresponse =
-                                await FirebaseCrud.deleteStoreItem(docId: e.id);
-                            if (storeitemresponse.code != 200) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: Text(
-                                          storeitemresponse.message.toString()),
-                                    );
-                                  });
-                            }
-                          },
                         ),
                       ],
                     ),
-                  ]));
+                  );
                 }).toList(),
               ),
             );
           }
-
           return const Center(child: CircularProgressIndicator());
-
         },
       ),
     );
